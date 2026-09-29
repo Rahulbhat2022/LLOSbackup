@@ -1,0 +1,10 @@
+Once the bell merchant this is what the once brilliant doctor has devolved to. Still cursed with immortality he spent his life gathering trinkets and magic items. He was found as a broken man in the depths of the mines by **the lady of corpses.** In his possession he had the hand of vecna. He had also been cursed, his life painful and tolling, she "healed" him using the hand of vecna and made him into the creature he is now. Still not cured from his brokenness he sits now at the bottom of the mines trading wares.
+ 
+Tear for a Tear: The Gatherer doesn’t only want coin. It wants something with emotional weight — a cherished memory, a drop of lifeblood, or an object that carries a heavy story. The more powerful the magic item, the greater the sacrifice.Sorrowful Bargains: The vendor may offer steep discounts to those who are genuinely grieving, as their sadness soothes its restless mind. Adventurers burdened by trauma might find themselves oddly welcomed.
+ 
+Sorrowful Bargains: The vendor may offer steep discounts to those who are genuinely grieving, as their sadness soothes its restless mind. Adventurers burdened by trauma might find themselves oddly welcomed.
+ 
+It sells items not out of generosity but to make room for more — the relief of trading an item away is fleeting, but it soothes the creature’s torment for a brief while. It might also hope that someone who wields the items properly could one day free it from its cursed existence.
+ 
+Living Burrow: The burrow itself is alive — an extension of the Gatherer’s curse. Walls of flesh and bone pulse faintly, and sharp limbs sprout to defend against aggressors. If someone tries to steal from the Gatherer, the tunnel collapses, or the would-be thief finds themselves slowly digested by the walls.
+ ![This may contain an artistic painting of hands and...](Exported%20image%2020251005092932-0.jpeg)

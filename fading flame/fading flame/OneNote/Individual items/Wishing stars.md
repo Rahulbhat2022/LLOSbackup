@@ -1,0 +1,1 @@
+The wishing stars is the cosmos of celestial bodies that can be seen when gazing up into the sky. They glow green during the night. They sing  [[The Silversong]] to those in need and those that wish for a better life.  The wishing star

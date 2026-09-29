@@ -1,0 +1,15 @@
+[package]
+name = "fading-flame-codex"
+version = "0.1.0"
+description = "Rules reference for the Fading Flame TTRPG campaign"
+
+[[command]]
+name = "serve"
+module = "sharrattj/static-web-server"
+runner = "https://webc.org/runner/wasi"
+
+[command.annotations.wasi]
+env = ["SERVER_PORT=8080", "SERVER_ROOT=/app/public"]
+
+[fs]
+"/app/public" = "."

@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Last Light Of Solace - The Codex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;500;600&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap" rel="stylesheet">
+<script src="rules.js?v=1"></script>
+<script src="spells.js?v=1"></script>
+<script src="classes.js?v=1"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px}
+:root{
+  --bg:#080705;--bg-mid:#0f0c0a;--bg-surf:#161210;--bg-raise:#1e1814;--bg-hover:#242018;
+  --ember:#d4500c;--ember-b:#f06522;--ember-d:#7a2e08;
+  --ember-gl:rgba(212,80,12,.16);--ember-br:rgba(212,80,12,.28);
+  --gold:#c4923a;--gold-b:#e0b060;--gold-d:#6a4e20;
+  --txt:#c8b89a;--txt-b:#e4d4b8;--txt-m:#7a6a52;--txt-f:#4a3e30;
+  --bdr:rgba(255,255,255,.06);--bdr-m:rgba(255,255,255,.1);
+  --sw:260px;--hh:60px;
+  --fd:'Cinzel Decorative',serif;--ft:'Cinzel',serif;--fb:'Crimson Pro',Georgia,serif;
+}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--ember-d);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--ember)}
+body{background:var(--bg);color:var(--txt);font-family:var(--fb);font-size:1rem;line-height:1.75;min-height:100vh;overflow-x:hidden}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");opacity:.45}
+.shell{display:grid;grid-template-columns:var(--sw) 1fr;grid-template-rows:var(--hh) 1fr;min-height:100vh}
+
+/* ── TOPBAR ── */
+.topbar{grid-column:1/-1;grid-row:1;position:sticky;top:0;z-index:200;display:flex;align-items:center;gap:1rem;padding:0 1.5rem;background:var(--bg-mid);border-bottom:1px solid var(--bdr);box-shadow:0 1px 30px rgba(0,0,0,.8)}
+.topbar-logo{display:flex;align-items:center;gap:.65rem;cursor:pointer;user-select:none}
+.topbar-logo svg{width:28px;height:28px;flex-shrink:0}
+.topbar-wm{font-family:var(--fd);font-size:.85rem;color:var(--gold-b);letter-spacing:.05em;line-height:1}
+.topbar-wm span{display:block;font-family:var(--ft);font-size:.52rem;letter-spacing:.25em;color:var(--txt-m);text-transform:uppercase;margin-top:.12rem}
+.tsearch{margin-left:auto;display:flex;align-items:center;gap:.5rem;background:var(--bg-surf);border:1px solid var(--bdr);border-radius:3px;padding:.35rem .85rem;width:260px;transition:border-color .2s,width .3s;position:relative}
+.tsearch:focus-within{border-color:var(--ember-br);width:380px}
+.tsearch svg{color:var(--txt-m);flex-shrink:0}
+.tsearch input{background:none;border:none;outline:none;color:var(--txt-b);font-family:var(--fb);font-size:.9rem;width:100%}
+.tsearch input::placeholder{color:var(--txt-m)}
+.sdrop{display:none;position:absolute;top:calc(100% + 6px);right:0;left:0;background:var(--bg-raise);border:1px solid var(--bdr-m);border-radius:3px;z-index:300;max-height:420px;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.8)}
+.sdrop.open{display:block}
+.sd-hd{padding:.5rem .9rem .25rem;font-family:var(--ft);font-size:.57rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ember);border-top:1px solid var(--bdr)}
+.sd-hd:first-child{border-top:none}
+.sd-row{display:flex;align-items:center;gap:.6rem;padding:.42rem .9rem;cursor:pointer;transition:background .12s;font-size:.87rem}
+.sd-row:hover{background:var(--bg-hover)}
+.sd-ico{color:var(--ember);font-size:.72rem;flex-shrink:0;width:14px;text-align:center}
+.sd-name{color:var(--txt-b);flex:1}
+.sd-sub{font-size:.74rem;color:var(--txt-m);white-space:nowrap;padding-left:.5rem}
+.sd-none{padding:1rem .9rem;color:var(--txt-m);font-style:italic;font-size:.88rem}
+
+/* ── SIDEBAR ── */
+.sidebar{grid-column:1;grid-row:2;position:sticky;top:var(--hh);height:calc(100vh - var(--hh));overflow-y:auto;background:var(--bg-mid);border-right:1px solid var(--bdr);padding:1.25rem 0 2rem}
+.nlabel{padding:.5rem 1.25rem .25rem;font-family:var(--ft);font-size:.57rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ember);display:flex;align-items:center;gap:.6rem}
+.nlabel::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--ember-br),transparent)}
+.nitem{display:flex;align-items:center;gap:.6rem;padding:.38rem 1.25rem;font-family:var(--fb);font-size:.92rem;color:var(--txt-m);cursor:pointer;border:none;background:none;width:100%;text-align:left;border-left:2px solid transparent;transition:color .15s,background .15s,border-color .15s}
+.nitem:hover{color:var(--txt);background:var(--bg-hover)}
+.nitem.active{color:var(--gold-b);background:linear-gradient(to right,var(--ember-gl),transparent);border-left-color:var(--ember)}
+.nico{font-size:.75rem;opacity:.6;width:14px;text-align:center}
+.nitem.active .nico{opacity:1}
+.nsub{overflow:hidden;max-height:0;transition:max-height .3s;padding-left:.75rem}
+.nsub.open{max-height:600px}
+.nsubitem{display:flex;align-items:center;gap:.5rem;padding:.28rem 1.25rem;font-size:.82rem;color:var(--txt-f);cursor:pointer;border:none;background:none;width:100%;text-align:left;border-left:1px solid transparent;transition:color .15s,border-color .15s}
+.nsubitem:hover{color:var(--txt-m);border-left-color:var(--bdr-m)}
+.nsubitem.active{color:var(--ember-b);border-left-color:var(--ember)}
+  .nsubitem::before{content:'-';font-size:.65rem;opacity:.4}
+.nsubitem.active::before{opacity:1;color:var(--ember)}
+
+/* ── MAIN ── */
+.main{grid-column:2;grid-row:2;overflow-y:auto;overflow-x:hidden}
+.page{display:none;animation:pi .22s ease}
+.page.active{display:block}
+@keyframes pi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* hero */
+.hero{padding:2.75rem 3rem 1.85rem;border-bottom:1px solid var(--bdr);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 100% at 100% 50%,var(--ember-gl),transparent);pointer-events:none}
+.eyebrow{font-family:var(--ft);font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;color:var(--ember);margin-bottom:.45rem}
+.h1{font-family:var(--fd);font-size:1.9rem;color:var(--gold-b);line-height:1.15;margin-bottom:.6rem}
+.hero-desc{font-style:italic;color:var(--txt-m);font-size:.94rem;max-width:540px;line-height:1.65}
+.body{padding:2rem 3rem 4rem;max-width:880px}
+
+/* ── HOME ── */
+.hgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:1px;background:var(--bdr);border:1px solid var(--bdr);margin-bottom:2rem}
+.hcard{background:var(--bg-surf);padding:1.35rem 1.15rem;cursor:pointer;transition:background .15s}
+.hcard:hover{background:var(--bg-raise)}
+.hci{font-size:1.2rem;margin-bottom:.5rem;display:block;opacity:.8}
+.hct{font-family:var(--ft);font-size:.83rem;font-weight:600;color:var(--gold-b);margin-bottom:.25rem}
+.hcd{font-size:.79rem;color:var(--txt-m);line-height:1.45}
+.hcb{display:inline-block;margin-top:.55rem;font-family:var(--ft);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;padding:.13rem .42rem;border-radius:2px}
+.bl{color:var(--ember-b);background:rgba(212,80,12,.1);border:1px solid var(--ember-br)}
+.lore{padding:1.25rem 1.5rem;background:var(--bg-surf);border:1px solid var(--bdr);border-left:3px solid var(--ember-d);font-style:italic;color:var(--txt-m);font-size:.9rem;line-height:1.7}
+.lore cite{display:block;margin-top:.65rem;font-style:normal;font-family:var(--ft);font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--txt-f)}
+
+/* ── SHARED ── */
+.section{margin-bottom:2.75rem}
+.stitle{font-family:var(--ft);font-size:1.05rem;font-weight:600;color:var(--gold-b);margin-bottom:.7rem;display:flex;align-items:center;gap:.75rem;padding-bottom:.5rem;border-bottom:1px solid var(--bdr);position:relative}
+.stitle::after{content:'';position:absolute;bottom:-1px;left:0;width:36px;height:1px;background:var(--ember)}
+.slead{font-size:.92rem;color:var(--txt-m);font-style:italic;margin-bottom:1.1rem;line-height:1.65}
+.rcard{background:var(--bg-surf);border:1px solid var(--bdr);border-radius:2px;padding:.95rem 1.15rem;margin-bottom:2px;transition:border-color .2s}
+.rcard:hover{border-color:rgba(212,80,12,.2)}
+.rn{font-family:var(--ft);font-size:.87rem;font-weight:600;color:var(--txt-b);margin-bottom:.28rem;display:flex;align-items:center;gap:.45rem}
+.rico{color:var(--ember);opacity:.75}
+.rd{font-size:.9rem;color:var(--txt);line-height:1.7}
+.rnote{margin-top:.45rem;font-size:.79rem;color:var(--txt-m);font-style:italic;border-top:1px solid var(--bdr);padding-top:.45rem}
+.rsub{margin-top:.6rem;padding-left:1rem;border-left:2px solid var(--bdr)}
+.rsub-item{margin-bottom:.32rem}
+.rsub-name{font-family:var(--ft);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-right:.32rem}
+.ibox{background:var(--bg-surf);border:1px solid var(--bdr);border-left:3px solid var(--ember-d);padding:.9rem 1.15rem;margin-bottom:.85rem;font-size:.87rem;color:var(--txt-m);line-height:1.65}
+.ibox strong{color:var(--txt-b)}
+
+/* ── COMBAT FLOWCHART ── */
+.flow{max-width:820px;margin:0 auto 1.5rem}
+.flow-node{background:var(--bg-surf);border:1px solid var(--bdr-m);border-radius:3px;padding:.8rem 1.05rem;text-align:center}
+.flow-node.fn-accent{border-color:var(--ember-br);background:linear-gradient(180deg,var(--ember-gl),var(--bg-surf))}
+.flow-node .fn-t{font-family:var(--ft);font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;color:var(--gold-b);margin-bottom:.32rem}
+.flow-node .fn-d{font-size:.83rem;color:var(--txt-m);line-height:1.6}
+.flow-arrow{display:flex;justify-content:center;color:var(--ember);font-size:1.15rem;line-height:1;margin:.35rem 0}
+.flow-split{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:0;align-items:start}
+.flow-col-lbl{font-family:var(--ft);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ember);text-align:center;margin-bottom:.5rem}
+@media(max-width:700px){.flow-split{grid-template-columns:1fr;gap:.35rem 0}}
+
+/* ── WOUNDS TABLE ── */
+.wtbl{width:100%;border-collapse:collapse;font-size:.84rem}
+.wtbl th{font-family:var(--ft);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--txt-m);background:var(--bg-raise);padding:.45rem .7rem;text-align:left;border-bottom:1px solid var(--bdr)}
+.wtbl td{padding:.52rem .7rem;border-bottom:1px solid var(--bdr);vertical-align:top;color:var(--txt)}
+.wtbl tr:hover td{background:rgba(255,255,255,.013)}
+.wroll{font-family:var(--ft);font-size:.8rem;color:var(--ember);text-align:center}
+.wtype{font-family:var(--ft);font-size:.78rem;color:var(--txt-b);margin-bottom:.12rem}
+.wflav{font-style:italic;color:var(--txt-m);font-size:.79rem;margin-bottom:.15rem}
+.weff{font-size:.82rem;color:var(--txt)}
+
+/* ── STAT GRID ── */
+.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1px;background:var(--bdr);border:1px solid var(--bdr);margin-bottom:1.5rem}
+.scard{background:var(--bg-surf);padding:.95rem 1.15rem;transition:background .15s}
+.scard:hover{background:var(--bg-raise)}
+.sabb{font-family:var(--ft);font-size:.65rem;letter-spacing:.2em;color:var(--ember);margin-bottom:.08rem}
+.sname{font-family:var(--ft);font-size:.9rem;font-weight:600;color:var(--gold-b);margin-bottom:.28rem}
+.sdesc{font-size:.82rem;color:var(--txt-m);line-height:1.55}
+.skgroup{margin-bottom:1rem}
+.skstat{font-family:var(--ft);font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--txt-f);margin-bottom:.35rem}
+.sktags{display:flex;flex-wrap:wrap;gap:.28rem}
+.sktag{font-size:.81rem;color:var(--txt);background:var(--bg-surf);border:1px solid var(--bdr);padding:.16rem .52rem;border-radius:2px}
+
+/* ── WEAPON TABLE ── */
+.table{width:100%;border-collapse:collapse;font-size:.83rem;margin-top:.65rem}
+.table th{font-family:var(--ft);font-size:.57rem;letter-spacing:.14em;text-transform:uppercase;color:var(--txt-m);background:var(--bg-raise);padding:.43rem .68rem;text-align:left;border-bottom:1px solid var(--bdr)}
+.table td{padding:.48rem .68rem;border-bottom:1px solid var(--bdr);vertical-align:top;color:var(--txt)}
+.table tr:hover td{background:rgba(255,255,255,.012)}
+.wn{font-family:var(--ft);font-size:.81rem;color:var(--txt-b)}
+.wd{color:var(--ember-b);font-family:var(--ft);font-size:.81rem;font-weight:600}
+.wb{color:var(--gold)}
+
+/* ── MATERIAL CARDS ── */
+.mcard{background:var(--bg-surf);border:1px solid var(--bdr);border-radius:2px;padding:.95rem 1.15rem;margin-bottom:2px;transition:border-color .2s}
+.mcard:hover{border-color:rgba(212,80,12,.2)}
+.mname{font-family:var(--ft);font-size:.88rem;font-weight:600;color:var(--gold-b);margin-bottom:.18rem}
+.meff-vs{font-family:var(--ft);font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ember);margin-bottom:.45rem}
+.meff{font-size:.87rem;color:var(--txt-b);margin-bottom:.38rem}
+.mreason{font-size:.82rem;color:var(--txt-m);font-style:italic;line-height:1.6}
+
+/* ── CREATURE GRID ── */
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:1px;background:var(--bdr);border:1px solid var(--bdr)}
+.ccard{background:var(--bg-surf);padding:.95rem 1.1rem;transition:background .15s}
+.ccard:hover{background:var(--bg-raise)}
+.ccn{font-family:var(--ft);font-size:.87rem;font-weight:600;color:var(--txt-b);margin-bottom:.22rem}
+.ccd{font-size:.81rem;color:var(--txt-m);line-height:1.5;margin-bottom:.45rem}
+.cctags{display:flex;gap:.3rem;flex-wrap:wrap}
+.cct{font-family:var(--ft);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;padding:.11rem .38rem;border-radius:2px;border:1px solid var(--bdr)}
+.cct.mat{color:var(--gold);border-color:rgba(196,146,58,.25);background:rgba(196,146,58,.06)}
+.cct.oil{color:var(--ember);border-color:var(--ember-br);background:var(--ember-gl)}
+
+/* ── CRAFT TABLES ── */
+.cblk{margin-bottom:2rem}
+.clabel{font-family:var(--ft);font-size:.76rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);padding:.45rem 0 .3rem;border-bottom:1px solid var(--bdr);margin-bottom:.45rem;display:flex;align-items:center;gap:.5rem}
+.clabel::after{content:'';flex:1;height:1px;background:var(--bdr)}
+.ctbl{width:100%;border-collapse:collapse;font-size:.81rem}
+.ctbl th{font-family:var(--ft);font-size:.56rem;letter-spacing:.13em;text-transform:uppercase;color:var(--txt-m);background:var(--bg-raise);padding:.4rem .64rem;text-align:left;border-bottom:1px solid var(--bdr)}
+.ctbl td{padding:.44rem .64rem;border-bottom:1px solid var(--bdr);vertical-align:top;color:var(--txt)}
+.ctbl tr:hover td{background:rgba(255,255,255,.011)}
+.tier{font-family:var(--ft);font-size:.63rem;padding:.1rem .33rem;border-radius:2px;font-weight:600}
+.t1{color:#8ab4a0;border:1px solid rgba(138,180,160,.25);background:rgba(138,180,160,.06)}
+.t2{color:var(--gold);border:1px solid rgba(196,146,58,.25);background:rgba(196,146,58,.06)}
+.t3{color:var(--ember-b);border:1px solid var(--ember-br);background:var(--ember-gl)}
+.t4{color:#e060e0;border:1px solid rgba(224,96,224,.25);background:rgba(224,96,224,.06)}
+
+/* ── THEORY ── */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1px;background:var(--bdr);border:1px solid var(--bdr)}
+.tcard{background:var(--bg-surf);padding:1.05rem 1.15rem;transition:background .15s}
+.tcard:hover{background:var(--bg-raise)}
+.tcn{font-family:var(--ft);font-size:.83rem;font-weight:600;color:var(--gold-b);margin-bottom:.32rem}
+.tcd{font-size:.86rem;color:var(--txt-m);line-height:1.6}
+
+/* ── SPELLS ── */
+.spell-ctrl{display:flex;flex-wrap:wrap;align-items:center;gap:.75rem;margin-bottom:1.75rem}
+.lpills{display:flex;gap:2px;background:var(--bg-surf);border:1px solid var(--bdr);border-radius:3px;overflow:hidden;padding:2px}
+.lp{padding:.3rem .85rem;font-family:var(--ft);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--txt-m);background:none;border:none;border-radius:2px;cursor:pointer;transition:all .15s}
+.lp:hover{color:var(--txt);background:var(--bg-hover)}
+.lp.active{color:var(--bg);background:var(--ember)}
+.scount{font-family:var(--ft);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--txt-f);margin-left:auto}
+.scount strong{color:var(--ember)}
+.schblk{margin-bottom:2.5rem}
+.schhdr{display:flex;align-items:baseline;gap:.85rem;margin-bottom:1.2rem;padding-bottom:.55rem;border-bottom:1px solid var(--bdr);position:relative}
+.schhdr::after{content:'';position:absolute;bottom:-1px;left:0;width:44px;height:1px;background:var(--ember)}
+.schico{font-size:1rem;color:var(--ember);opacity:.7}
+.schnm{font-family:var(--ft);font-size:1.1rem;font-weight:600;color:var(--gold-b)}
+.schtag{font-style:italic;color:var(--txt-m);font-size:.82rem}
+.lvldiv{display:flex;align-items:center;gap:.7rem;margin:1.2rem 0 .65rem}
+.lvllbl{font-family:var(--ft);font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ember-d);white-space:nowrap}
+.lvlline{flex:1;height:1px;background:var(--bdr)}
+.spcard{background:var(--bg-surf);border:1px solid var(--bdr);border-radius:2px;margin-bottom:2px;overflow:hidden;transition:border-color .2s}
+.spcard:hover{border-color:rgba(212,80,12,.2)}
+.spcard.open{border-color:var(--ember-br)}
+.sphdr{display:flex;align-items:center;gap:.75rem;padding:.7rem .95rem;cursor:pointer;background:var(--bg-raise);transition:background .15s;user-select:none}
+.sphdr:hover,.spcard.open .sphdr{background:var(--bg-hover)}
+.spcard.open .sphdr{border-bottom:1px solid var(--bdr)}
+.spnm{font-family:var(--ft);font-size:.86rem;font-weight:600;color:var(--txt-b);flex:1}
+.spcard.open .spnm{color:var(--gold-b)}
+.spbdg{font-family:var(--ft);font-size:.56rem;letter-spacing:.1em;color:var(--ember);background:rgba(212,80,12,.1);border:1px solid rgba(212,80,12,.2);padding:.13rem .46rem;border-radius:2px;white-space:nowrap}
+.spdmgbdg{font-family:var(--ft);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-b);background:rgba(196,146,58,.12);border:1px solid rgba(196,146,58,.25);padding:.13rem .46rem;border-radius:2px;white-space:nowrap}
+.sparr{color:var(--txt-m);font-size:.6rem;transition:transform .2s;flex-shrink:0}
+.spcard.open .sparr{transform:rotate(180deg);color:var(--ember)}
+.spbody{display:none;padding:1rem 1.15rem 1.15rem}
+.spcard.open .spbody{display:block}
+.comps{display:flex;flex-wrap:wrap;gap:.36rem;margin-bottom:.9rem}
+.comp{display:flex;align-items:center;gap:.36rem;background:rgba(255,255,255,.03);border:1px solid var(--bdr);border-radius:2px;padding:.17rem .5rem;font-size:.76rem}
+.ct{font-family:var(--ft);font-size:.57rem;letter-spacing:.1em;color:var(--gold)}
+.cd{color:var(--txt-m)}
+.cs{color:var(--ember-b);font-weight:600}
+.csep{color:var(--txt-f)}
+.spmeta{display:flex;flex-wrap:wrap;gap:1.15rem;margin-bottom:.82rem}
+.spmi{font-size:.78rem;color:var(--txt-m)}
+.spmi b{font-family:var(--ft);font-size:.57rem;letter-spacing:.1em;text-transform:uppercase;color:var(--txt-f);margin-right:.26rem}
+.spdesc{color:var(--txt);font-size:.91rem;line-height:1.72;margin-bottom:.55rem}
+.spup{border-top:1px solid var(--bdr);padding-top:.58rem;margin-top:.58rem;font-size:.81rem;color:var(--txt-m);font-style:italic}
+.spuplbl{font-style:normal;font-family:var(--ft);font-size:.56rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-d);margin-right:.36rem}
+.spnoup{border-top:1px solid var(--bdr);padding-top:.58rem;margin-top:.58rem;font-size:.76rem;color:var(--txt-f);font-style:italic}
+mark{background:rgba(212,80,12,.28);color:var(--txt-b);border-radius:1px;padding:0 1px}
+.empty{padding:2.5rem 1rem;text-align:center;color:var(--txt-m);font-style:italic}
+.empty strong{display:block;font-family:var(--ft);font-style:normal;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--txt-f);margin-bottom:.4rem}
+
+.mob-menu-btn{display:none;flex-direction:column;justify-content:center;gap:5px;background:none;border:none;cursor:pointer;padding:.4rem .5rem;margin-right:.25rem;flex-shrink:0}
+.mob-menu-btn span{display:block;width:20px;height:2px;background:var(--txt-m);border-radius:2px;transition:background .15s}
+.mob-menu-btn:hover span{background:var(--txt)}
+.mob-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.7)}
+.mob-overlay.open{display:block}
+.mob-drawer{position:fixed;top:0;left:0;bottom:0;width:80vw;max-width:300px;background:var(--bg-mid);border-right:1px solid var(--bdr);z-index:501;overflow-y:auto;padding:1rem 0 2rem;transform:translateX(-100%);transition:transform .25s ease}
+.mob-overlay.open .mob-drawer{transform:translateX(0)}
+.mob-close{display:flex;align-items:center;gap:.5rem;padding:.5rem 1.25rem .75rem;font-family:var(--ft);font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--txt-m);background:none;border:none;cursor:pointer;margin-bottom:.25rem;width:100%;text-align:left}
+.mob-close:hover{color:var(--txt)}
+/* ── TABLE SCROLL WRAPPER ── */
+.tscroll{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--bdr);border-radius:2px;margin-top:.65rem}
+.tscroll .table,.tscroll .wtbl,.tscroll .ctbl{margin-top:0;border:none;min-width:520px}
+.tscroll::-webkit-scrollbar{height:4px}
+.tscroll::-webkit-scrollbar-thumb{background:var(--ember-d);border-radius:2px}
+
+/* ── TABLET (≤900px) ── */
+@media(max-width:900px){
+  :root{--sw:220px}
+  .hero{padding:2rem 2rem 1.5rem}
+  .body{padding:1.5rem 2rem 3rem}
+  .hgrid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+  .sgrid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+  .cgrid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+  .tgrid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+  .tsearch{width:200px}
+  .tsearch:focus-within{width:280px}
+}
+
+/* ── MOBILE (≤700px) ── */
+@media(max-width:700px){
+  :root{--sw:0px;--hh:52px}
+  .sidebar{display:none}
+  .mob-menu-btn{display:flex}
+  .hero{padding:1.5rem 1rem 1.15rem}
+  .body{padding:1.25rem 1rem 3rem;max-width:100%}
+  .h1{font-size:1.45rem}
+  .hero-desc{font-size:.85rem}
+  .tsearch{width:130px}
+  .tsearch:focus-within{width:185px}
+  .hgrid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+  .sgrid{grid-template-columns:1fr}
+  .cgrid{grid-template-columns:1fr 1fr}
+  .tgrid{grid-template-columns:1fr}
+  .table,.wtbl,.ctbl{font-size:.76rem;min-width:480px}
+  .table th,.wtbl th,.ctbl th{font-size:.52rem;padding:.35rem .5rem}
+  .table td,.wtbl td,.ctbl td{padding:.4rem .5rem}
+  .sphdr{padding:.6rem .75rem;gap:.5rem;min-height:48px}
+  .spbody{padding:.75rem .75rem 1rem}
+  .comps{gap:.25rem}
+  .comp{font-size:.7rem;padding:.14rem .4rem}
+  .spmeta{gap:.75rem}
+  .spnm{font-size:.8rem}
+  .spell-ctrl{gap:.5rem}
+  .lpills{flex-wrap:wrap}
+  .lp{padding:.28rem .65rem}
+  .rcard{padding:.75rem .9rem}
+  .cblk{margin-bottom:1.5rem}
+  .clabel{font-size:.68rem}
+  .scount{margin-left:0;width:100%}
+  .nitem,.nsubitem,.lp,.sd-row{min-height:44px;display:flex;align-items:center}
+  .sk-card [style*="grid-template-columns"]{grid-template-columns:1fr!important}
+}
+
+/* ── CLASS PAGES ── */
+.class-tabs{display:flex;gap:2px;flex-wrap:wrap;margin-bottom:1.75rem;background:var(--bg-surf);border:1px solid var(--bdr);border-radius:3px;padding:2px}
+.ctab{padding:.32rem .9rem;font-family:var(--ft);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--txt-m);background:none;border:none;border-radius:2px;cursor:pointer;transition:all .15s}
+.ctab:hover{color:var(--txt);background:var(--bg-hover)}
+.ctab.active{color:var(--bg);background:var(--ember)}
+.class-view{display:none}.class-view.active{display:block}
+.class-hero-row{display:flex;align-items:baseline;gap:1rem;margin-bottom:.85rem}
+.class-name{font-family:var(--fd);font-size:1.45rem;color:var(--gold-b);line-height:1.1}
+.class-tag{font-style:italic;color:var(--txt-m);font-size:.9rem}
+.class-desc{color:var(--txt);font-size:.92rem;line-height:1.72;margin-bottom:1.5rem}
+.class-note{background:var(--bg-surf);border:1px solid var(--bdr);border-left:3px solid var(--ember-d);padding:.7rem 1rem;font-size:.84rem;color:var(--txt-m);margin-bottom:1.5rem;line-height:1.6}
+.prog-table{width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:1.75rem}
+.prog-table th{font-family:var(--ft);font-size:.56rem;letter-spacing:.13em;text-transform:uppercase;color:var(--txt-m);background:var(--bg-raise);padding:.38rem .65rem;text-align:left;border-bottom:1px solid var(--bdr)}
+.prog-table td{padding:.42rem .65rem;border-bottom:1px solid var(--bdr);vertical-align:top;color:var(--txt)}
+.prog-table tr:hover td{background:rgba(255,255,255,.012)}
+.prog-lvl{font-family:var(--ft);font-size:.78rem;color:var(--ember);font-weight:600}
+.res-box{background:var(--bg-surf);border:1px solid var(--bdr);border-radius:3px;padding:.9rem 1.1rem;margin-bottom:1.5rem}
+.res-name{font-family:var(--ft);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.55rem}
+.res-row{font-size:.85rem;color:var(--txt-m);margin-bottom:.22rem;line-height:1.55}
+.res-row strong{color:var(--txt-b);font-family:var(--ft);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
+.tier-blk{margin-bottom:2rem}
+.tier-hdr{display:flex;align-items:center;gap:.75rem;padding:.5rem 0 .45rem;border-bottom:1px solid var(--bdr);margin-bottom:.7rem;position:relative}
+.tier-hdr::after{content:'';position:absolute;bottom:-1px;left:0;width:36px;height:1px;background:var(--ember)}
+.tier-num{font-family:var(--ft);font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ember)}
+.tier-label{font-family:var(--ft);font-size:.95rem;font-weight:600;color:var(--gold-b)}
+.sk-card{background:var(--bg-surf);border:1px solid var(--bdr);border-radius:2px;padding:.75rem 1rem;margin-bottom:2px;transition:border-color .2s}
+.sk-card:hover{border-color:rgba(212,80,12,.2)}
+.sk-top{display:flex;align-items:baseline;gap:.6rem;margin-bottom:.28rem;flex-wrap:wrap}
+.sk-name{font-family:var(--ft);font-size:.84rem;font-weight:600;color:var(--txt-b)}
+.sk-cost{font-family:var(--ft);font-size:.55rem;letter-spacing:.1em;padding:.1rem .38rem;border-radius:2px;color:var(--ember-b);background:rgba(212,80,12,.1);border:1px solid rgba(212,80,12,.2)}
+.sk-prereq{font-size:.73rem;color:var(--txt-f);font-style:italic;margin-left:auto}
+.sk-desc{font-size:.87rem;color:var(--txt);line-height:1.68}
+
+/* ── SKILL TREE VIEW ── */
+.view-toggle{display:flex;gap:2px;margin-bottom:1.25rem;background:var(--bg-surf);border:1px solid var(--bdr);border-radius:3px;padding:2px;width:max-content}
+.vtbtn{padding:.32rem .9rem;font-family:var(--ft);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--txt-m);background:none;border:none;border-radius:2px;cursor:pointer;transition:all .15s}
+.vtbtn:hover{color:var(--txt);background:var(--bg-hover)}
+.vtbtn.active{color:var(--bg);background:var(--gold)}
+#classes-body.mode-tree .cv-list{display:none}
+#classes-body.mode-list .cv-tree{display:none}
+#classes-body:not(.mode-tree):not(.mode-list) .cv-tree{display:none}
+.tree-scroll{overflow-x:auto;overflow-y:hidden;padding:2.2rem 1rem 1rem;margin:0 -1rem}
+.tree-canvas{position:relative}
+.tree-col-lbl{position:absolute;top:-2rem;font-family:var(--ft);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--txt-f);white-space:nowrap}
+.tree-col-lbl b{color:var(--ember);font-style:normal;margin-right:.4rem}
+.tree-lines{position:absolute;top:0;left:0;pointer-events:none;overflow:visible}
+.tree-lines path{fill:none;stroke:var(--ember-d);stroke-width:1.75}
+.tree-lines path.dashed{stroke:var(--gold);stroke-dasharray:3 4;stroke-width:1.75}
+.tree-node{position:absolute;width:172px;background:var(--bg-surf);border:1px solid var(--bdr);border-radius:3px;padding:.55rem .7rem;cursor:pointer;transition:border-color .15s,transform .15s,background .15s}
+.tree-node:hover{border-color:rgba(212,80,12,.4);transform:translateY(-1px)}
+.tree-node.selected{border-color:var(--ember);background:var(--bg-hover)}
+.tree-node .tn-name{font-family:var(--ft);font-size:.68rem;font-weight:600;color:var(--txt-b);line-height:1.3;margin-bottom:.3rem}
+.tree-node .tn-cost{display:inline-block;font-family:var(--ft);font-size:.52rem;letter-spacing:.08em;color:var(--ember-b)}
+.tree-detail{margin-top:1.5rem}
+.tree-detail .sk-card{border-color:var(--ember)}
+.tree-hint{font-size:.82rem;color:var(--txt-f);font-style:italic;padding:.75rem 1rem}
+.placeholder-box{padding:3rem 1rem;text-align:center;border:1px dashed var(--bdr);border-radius:3px}
+.placeholder-box strong{display:block;font-family:var(--ft);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--txt-f);margin-bottom:.5rem}
+.placeholder-box p{color:var(--txt-m);font-size:.88rem}
+
+/* ── ETHER CORES ── */
+.ether-strain{margin-bottom:2rem;border:1px solid var(--bdr);border-radius:3px;overflow:hidden}
+.ether-hdr{padding:.8rem 1rem .65rem;border-bottom:1px solid var(--bdr)}
+.ether-name{font-family:var(--fd);font-size:1.1rem;color:var(--gold-b);line-height:1.2}
+.ether-sub{font-family:var(--ft);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--txt-m);margin-bottom:.3rem}
+.ether-lore{font-size:.83rem;color:var(--txt-m);line-height:1.65;font-style:italic}
+.ether-cols{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--bdr)}
+.ether-col{padding:.8rem .95rem .9rem}
+.ether-col:first-child{border-right:1px solid var(--bdr)}
+.ether-method-lbl{display:inline-flex;align-items:center;gap:.4rem;font-family:var(--ft);font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;font-weight:600;margin-bottom:.6rem;padding:.18rem .45rem;border-radius:2px}
+.em-consume{background:rgba(212,80,12,.1);color:var(--ember);border:1px solid rgba(212,80,12,.22)}
+.em-focus{background:rgba(55,138,221,.1);color:#185FA5;border:1px solid rgba(55,138,221,.22)}
+@media(prefers-color-scheme:dark){.em-focus{color:#85B7EB}}
+.perm-pill{font-size:.5rem;letter-spacing:.1em;padding:.1rem .32rem;border-radius:10px;background:rgba(63,153,34,.12);border:1px solid rgba(99,153,34,.28);color:#3B6D11;margin-left:.35rem}
+@media(prefers-color-scheme:dark){.perm-pill{color:#C0DD97;border-color:rgba(192,221,151,.25)}}
+.ether-tiers{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin-bottom:.55rem}
+.etier{border-radius:2px;padding:.35rem .45rem}
+.etier-name{font-family:var(--ft);font-size:.53rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.25rem}
+.etier-text{font-size:.74rem;line-height:1.58;color:var(--txt-m)}
+.et-uc{background:var(--bg-surf);border:1px solid var(--bdr)}
+.et-r{background:rgba(55,138,221,.07);border:1px solid rgba(55,138,221,.18)}
+.et-vr{background:rgba(127,119,221,.08);border:1px solid rgba(127,119,221,.22)}
+.et-l{background:rgba(186,117,23,.08);border:1px solid rgba(186,117,23,.22)}
+.et-uc .etier-name{color:var(--txt-m)}
+.et-r  .etier-name{color:#185FA5}
+.et-vr .etier-name{color:#534AB7}
+.et-l  .etier-name{color:var(--ember-d)}
+@media(prefers-color-scheme:dark){.et-r .etier-name{color:#85B7EB}.et-vr .etier-name{color:#AFA9EC}.et-l .etier-name{color:#FAC775}}
+.ether-note{padding:.4rem .6rem;border-radius:2px;font-size:.77rem;line-height:1.58;border-left:2px solid;color:var(--txt-m);margin-top:.1rem}
+.en-crash{border-color:#A32D2D;background:rgba(226,75,74,.05)}
+.en-addict{border-color:var(--ember-d);background:rgba(186,117,23,.05)}
+.en-safe{border-color:#3B6D11;background:rgba(99,153,34,.05)}
+.en-volatile{border-color:#534AB7;background:rgba(127,119,221,.05)}
+.ether-craft{font-size:.74rem;color:var(--txt-f);font-style:italic;margin-top:.4rem}
+@media(max-width:700px){.ether-cols{grid-template-columns:1fr}.ether-col:first-child{border-right:none;border-bottom:1px solid var(--bdr)}.ether-tiers{grid-template-columns:1fr 1fr}}
+
+/* ── VERY SMALL (≤380px) ── */
+@media(max-width:380px){
+  .cgrid{grid-template-columns:1fr}
+  .hgrid{grid-template-columns:1fr 1fr}
+  .topbar-wm span{display:none}
+  .tsearch{width:110px}
+  .tsearch:focus-within{width:155px}
+  .card-columns{grid-template-columns:1fr!important}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-logo" onclick="showPage('home')">
+    <svg viewBox="0 0 28 36" fill="none">
+      <defs>
+        <linearGradient id="go" x1="14" y1="2" x2="14" y2="34" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#f06522"/><stop offset="100%" stop-color="#6a1e04"/></linearGradient>
+        <linearGradient id="gi" x1="14" y1="10" x2="14" y2="30" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#f8a040"/><stop offset="100%" stop-color="#c04010"/></linearGradient>
+      </defs>
+      <path d="M14 2C14 2 5 11 5 20C5 25.5 9 30 14 30C19 30 23 25.5 23 20C23 11 14 2 14 2Z" fill="url(#go)" opacity=".9"/>
+      <path d="M14 9C14 9 9 15 9 20.5C9 23.5 11.2 26 14 26C16.8 26 19 23.5 19 20.5C19 15 14 9 14 9Z" fill="url(#gi)"/>
+      <path d="M14 17C14 17 12 19.5 12 22C12 23.1 12.9 24 14 24C15.1 24 16 23.1 16 22C16 19.5 14 17 14 17Z" fill="white" opacity=".7"/>
+      <ellipse cx="14" cy="33" rx="5" ry="2" fill="black" opacity=".35"/>
+    </svg>
+    <div class="topbar-wm">Last Light Of Solace<span>The Codex</span></div>
+  </div>
+  <button class="mob-menu-btn" id="mob-menu-btn" onclick="toggleMobMenu()" aria-label="Open navigation">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="tsearch" id="swrap">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="gsearch" placeholder="Search everything…" autocomplete="off" oninput="doSearch(this.value)" onfocus="openDrop()">
+    <div class="sdrop" id="sdrop"></div>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="nlabel">Navigate</div>
+  <button class="nitem active" id="nav-home"     onclick="showPage('home')"><span class="nico">⌂</span>Home</button>
+  <div class="nlabel" style="margin-top:.5rem">Magic</div>
+  <button class="nitem" id="nav-magic"       onclick="showPage('magic')"><span class="nico">✦</span>Magic Theory</button>
+  <button class="nitem" id="nav-spellrules"  onclick="showPage('spellrules')"><span class="nico">⟳</span>Spell Mechanics</button>
+  <button class="nitem" id="nav-spells"      onclick="showPage('spells');setSchool('all')"><span class="nico">◎</span>All Spells</button>
+  <div class="nsub open" id="school-subnav"></div>
+  <div class="nlabel" style="margin-top:.5rem">Combat</div>
+  <button class="nitem" id="nav-combatguide" onclick="showPage('combatguide')"><span class="nico">🜋</span>Combat Guide</button>
+  <button class="nitem" id="nav-actions"  onclick="showPage('actions')"><span class="nico">⬡</span>Actions</button>
+  <button class="nitem" id="nav-wounds"   onclick="showPage('wounds')"><span class="nico">✕</span>Wounds</button>
+  <div class="nlabel" style="margin-top:.5rem">Character</div>
+  <button class="nitem" id="nav-stats"    onclick="showPage('stats')"><span class="nico">◈</span>Stats &amp; Skills</button>
+  <button class="nitem" id="nav-weapons"  onclick="showPage('weapons')"><span class="nico">⚔</span>Weapons</button>
+  <button class="nitem" id="nav-armors" onclick="showPage('armors')">
+  <span class="nico">🛡</span>Armors
+  </button>
+  <button class="nitem" id="nav-arts" onclick="showPage('arts')"><span class="nico">🗡</span>Arts</button>
+  <div class="nlabel" style="margin-top:.5rem">Creatures</div>
+  <button class="nitem" id="nav-creatures" onclick="showPage('creatures')"><span class="nico">☽</span>Creature Types</button>
+  <div class="nlabel" style="margin-top:.5rem">Crafting</div>
+  <button class="nitem" id="nav-oils"     onclick="showPage('oils')"><span class="nico">🜁</span>Monster Oils</button>
+  <button class="nitem" id="nav-poisons"  onclick="showPage('poisons')"><span class="nico">⚗</span>Poisons</button>
+  <button class="nitem" id="nav-ether"    onclick="showPage('ether')"><span class="nico">◇</span>Ether Cores</button>
+  <div class="nlabel" style="margin-top:.5rem">Character Build</div>
+  <button class="nitem" id="nav-classes"     onclick="showPage('classes')"><span class="nico">◉</span>Classes</button>
+  <button class="nitem" id="nav-subclasses"  onclick="showPage('subclasses')"><span class="nico">◈</span>Subclasses</button>
+  <button class="nitem" id="nav-backgrounds" onclick="showPage('backgrounds')"><span class="nico">✎</span>Backgrounds</button>
+</nav>
+
+<!-- MOBILE NAV DRAWER -->
+<div class="mob-overlay" id="mob-overlay" onclick="closeMobMenu()">
+  <div class="mob-drawer" onclick="event.stopPropagation()">
+    <button class="mob-close" onclick="closeMobMenu()">✕ &nbsp;Close</button>
+    <div class="nlabel">Navigate</div>
+    <button class="nitem" onclick="mobNav('home')"><span class="nico">⌂</span>Home</button>
+    <div class="nlabel" style="margin-top:.5rem">Magic</div>
+    <button class="nitem" onclick="mobNav('magic')"><span class="nico">✦</span>Magic Theory</button>
+    <button class="nitem" onclick="mobNav('spellrules')"><span class="nico">⟳</span>Spell Mechanics</button>
+    <button class="nitem" onclick="mobNav('spells')"><span class="nico">◎</span>All Spells</button>
+    <div style="padding-left:.75rem" id="mob-school-subnav"></div>
+    <div class="nlabel" style="margin-top:.5rem">Combat</div>
+    <button class="nitem" onclick="mobNav('combatguide')"><span class="nico">🧭</span>Combat Guide</button>
+    <button class="nitem" onclick="mobNav('actions')"><span class="nico">⬡</span>Actions</button>
+    <button class="nitem" onclick="mobNav('wounds')"><span class="nico">✕</span>Wounds</button>
+    <div class="nlabel" style="margin-top:.5rem">Character</div>
+    <button class="nitem" onclick="mobNav('stats')"><span class="nico">◈</span>Stats &amp; Skills</button>
+    <button class="nitem" onclick="mobNav('weapons')"><span class="nico">⚔</span>Weapons</button>
+    <button class="nitem" onclick="mobNav('armors')"><span class="nico">🛡</span>Armors</button>
+    <button class="nitem" onclick="mobNav('arts')"><span class="nico">🗡</span>Arts</button>
+    <div class="nlabel" style="margin-top:.5rem">Creatures</div>
+    <button class="nitem" onclick="mobNav('creatures')"><span class="nico">☽</span>Creature Types</button>
+    <div class="nlabel" style="margin-top:.5rem">Crafting</div>
+    <button class="nitem" onclick="mobNav('oils')"><span class="nico">🜁</span>Monster Oils</button>
+    <button class="nitem" onclick="mobNav('poisons')"><span class="nico">⚗</span>Poisons</button>
+    <button class="nitem" onclick="mobNav('ether')"><span class="nico">◇</span>Ether Cores</button>
+    <div class="nlabel" style="margin-top:.5rem">Character Build</div>
+    <button class="nitem" onclick="mobNav('classes')"><span class="nico">◉</span>Classes</button>
+    <button class="nitem" onclick="mobNav('subclasses')"><span class="nico">◈</span>Subclasses</button>
+    <button class="nitem" onclick="mobNav('backgrounds')"><span class="nico">✎</span>Backgrounds</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="hero"><div class="eyebrow">Reference Guide</div><h1 class="h1">The Codex</h1><p class="hero-desc">Rules, magic, and lore for the world of Solace: a city of ash and ambition, lit by a sun that may already be dying.</p></div>
+  <div class="body"><div class="hgrid" id="hgrid"></div><div class="lore">Magic originates from the Source: a celestial anomaly that emits quantum particles of light stretched into strings. These filaments permeate the world like threads of potential energy woven through reality. Spellcasting is the art of manipulating these strings through Vocal resonance, Somatic weaving, and Material anchoring. Only those with magical sight can perceive them at all.<cite>- On the Nature of the Source, Kemura Academy</cite></div></div>
+</div>
+
+<!-- MAGIC THEORY -->
+<div class="page" id="page-magic">
+  <div class="hero"><div class="eyebrow">The Source</div><h1 class="h1">Magic Theory</h1><p class="hero-desc">The physics of the Source strings: how magic works, why it works, and what it costs to bend it to your will.</p></div>
+  <div class="body" id="magic-body"></div>
+</div>
+
+<!-- SPELL MECHANICS -->
+<div class="page" id="page-spellrules">
+  <div class="hero"><div class="eyebrow">Spellcasting Rules</div><h1 class="h1">Spell Mechanics</h1><p class="hero-desc">How spells interact with targets, how damage is reduced, when threshold saves apply, and how concentration works during and after casting.</p></div>
+  <div class="body" id="spellrules-body"></div>
+</div>
+
+<!-- SPELLS -->
+<div class="page" id="page-spells">
+  <div class="hero"><div class="eyebrow">Schools of Magic</div><h1 class="h1">Spells</h1><p class="hero-desc">Nine schools, each a different means of manipulating the Source strings. Each component (Somatic, Verbal, Material) demands its own actions and its own threshold of successes.</p></div>
+  <div class="body">
+    <div class="spell-ctrl">
+      <div class="lpills" id="level-pills"></div>
+      <div class="scount" id="scount"></div>
+    </div>
+    <div id="spell-out"></div>
+  </div>
+</div>
+
+<!-- COMBAT GUIDE -->
+<div class="page" id="page-combatguide">
+  <div class="hero"><div class="eyebrow">Combat</div><h1 class="h1">Combat Guide</h1><p class="hero-desc">A short walkthrough of how a hit actually resolves, from the attacker's first roll to the wound that lands, plus a flowchart of the whole sequence.</p></div>
+  <div class="body" id="combatguide-body"></div>
+</div>
+
+<!-- ACTIONS -->
+<div class="page" id="page-actions">
+  <div class="hero"><div class="eyebrow">Combat</div><h1 class="h1">Actions &amp; Reactions</h1><p class="hero-desc">Unlike D&amp;D, you gain more actions as you level, not more attacks per action. Reactions cost from your next turn. Every decision is a real trade-off.</p></div>
+  <div class="body" id="actions-body"></div>
+</div>
+
+<!-- WOUNDS -->
+<div class="page" id="page-wounds">
+  <div class="hero"><div class="eyebrow">Combat</div><h1 class="h1">Wounds</h1><p class="hero-desc">This system is more brutal than most. Combat is lethal. Deep wounds bleed out. Survival is about reducing damage, not absorbing it.</p></div>
+  <div class="body" id="wounds-body"></div>
+</div>
+
+<!-- STATS -->
+<div class="page" id="page-stats">
+  <div class="hero"><div class="eyebrow">Character</div><h1 class="h1">Stats &amp; Skills</h1><p class="hero-desc">Eight core attributes, each governing a distinct domain. Weapons often combine two stats: a bow uses both Strength and Composure.</p></div>
+  <div class="body" id="stats-body"></div>
+</div>
+
+<!-- WEAPONS -->
+<div class="page" id="page-weapons">
+  <div class="hero"><div class="eyebrow">Combat</div><h1 class="h1">Weapons</h1><p class="hero-desc">Melee, ranged, range penalties, and the materials that make weapons effective against specific creature types.</p></div>
+  <div class="body" id="weapons-body"></div>
+</div>
+<!-- Armors -->
+<div class="page" id="page-armors">
+  <div class="hero"><div class="eyebrow">Combat</div><h1 class="h1">Armors</h1><p class="hero-desc">Rules regarding armors.</p></div>
+  <div class="body" id="armors-body"></div>
+</div>
+
+<!-- ARTS -->
+<div class="page" id="page-arts">
+  <div class="hero"><div class="eyebrow">Character</div><h1 class="h1">Arts</h1><p class="hero-desc">Unlike the normal skills on your character sheets, arts are more complex skills that many spend their life on perfecting. In this category you have skills such as tools, weapon arts and defensive arts.</p></div>
+  <div class="body" id="arts-body"></div>
+</div>
+
+<!-- CREATURES -->
+<div class="page" id="page-creatures">
+  <div class="hero"><div class="eyebrow">Bestiary</div><h1 class="h1">Creature Types</h1><p class="hero-desc">Fourteen creature categories. Each has specific material and oil vulnerabilities: the right preparation before a hunt is half the battle.</p></div>
+  <div class="body" id="creatures-body"></div>
+</div>
+
+<!-- OILS -->
+<div class="page" id="page-oils">
+  <div class="hero"><div class="eyebrow">Crafting</div><h1 class="h1">Monster Oils</h1><p class="hero-desc">Applied to weapons before a hunt. Three tiers per creature type: each tier requires rarer components but delivers dramatically better results.</p></div>
+  <div class="body" id="oils-body"></div>
+</div>
+
+<!-- POISONS -->
+<div class="page" id="page-poisons">
+  <div class="hero"><div class="eyebrow">Crafting</div><h1 class="h1">Poisons</h1><p class="hero-desc">Where oils target monsters, poisons target mortals. Four tiers from common blade coatings to legendary mind-shattering serums.</p></div>
+  <div class="body" id="poisons-body"></div>
+</div>
+
+<!-- CLASSES -->
+<div class="page" id="page-classes">
+  <div class="hero"><div class="eyebrow">Character Build</div><h1 class="h1">Classes</h1><p class="hero-desc">Your class defines your combat role, resource economy, and skill progression. Each class has five tiers of skills unlocked as you level up.</p></div>
+  <div class="body" id="classes-body"></div>
+</div>
+
+<!-- SUBCLASSES -->
+<div class="page" id="page-subclasses">
+  <div class="hero"><div class="eyebrow">Character Build</div><h1 class="h1">Subclasses</h1><p class="hero-desc">Subclasses are universal: any character can take one regardless of class. They represent a deeper specialisation or a secondary discipline.</p></div>
+  <div class="body" id="subclasses-body"></div>
+</div>
+
+<!-- BACKGROUNDS -->
+<div class="page" id="page-backgrounds">
+  <div class="hero"><div class="eyebrow">Character Build</div><h1 class="h1">Backgrounds</h1><p class="hero-desc">Backgrounds represent who you were before adventuring: the contacts you made, the skills you picked up, and the resources you still carry.</p></div>
+  <div class="body" id="backgrounds-body"></div>
+</div>
+
+<!-- ETHER CORES -->
+<div class="page" id="page-ether">
+  <div class="hero"><div class="eyebrow">Crafting</div><h1 class="h1">Ether Cores</h1><p class="hero-desc">One-use crystals of concentrated Source energy. Consumed directly for raw temporary power, or permanently infused into a spellcasting focus by a craftsman for lasting effect. Four strains. Four completely different identities.</p></div>
+  <div class="body" id="ether-body"></div>
+</div>
+
+</main>
+</div>
+
+<script>
+// ── STATE ──
+let curPage='home', curSchool='all', curLevel='all';
+
+// ── ROUTING ──
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nitem').forEach(n=>n.classList.remove('active'));
+  const pg=document.getElementById('page-'+id); if(pg) pg.classList.add('active');
+  const nb=document.getElementById('nav-'+id);  if(nb) nb.classList.add('active');
+  curPage=id; closeDrop();
+  const r = {
+  magic: rMagic,
+  spellrules: rSpellRules,
+  combatguide: rCombatGuide,
+  actions: rActions,
+  wounds: rWounds,
+  stats: rStats,
+  weapons: rWeapons,
+  armors: rArmors,
+  arts: rArts,
+  creatures: rCreatures,
+  oils: rOils,
+  poisons: rPoisons,
+  spells: rSpells,
+  classes: rClasses,
+  subclasses: rSubclasses,
+  backgrounds: rBackgrounds,
+  ether: rEther
+};
+  if(r[id]){
+    try{ r[id](); }
+    catch(e){ console.error('Failed to render page "'+id+'":', e); showPageError(id); }
+  }
+}
+
+// Shown when a page's render function throws, most commonly because one of
+// rules.js / spells.js / classes.js failed to finish downloading (dropped
+// connection, blocked request, etc.) and the data it defines is missing.
+// The page's own dataset.r "already rendered" guard is set before that data
+// is touched, so without clearing it a retry would just no-op forever.
+function showPageError(id){
+  const body=document.getElementById(id==='spells'?'spell-out':id+'-body');
+  if(!body) return;
+  delete body.dataset.r;
+  body.innerHTML=`<div class="ibox" style="border-left-color:var(--ember)"><strong>This page failed to load.</strong> A required script did not finish downloading, most likely a dropped connection. <button onclick="location.reload()" style="margin-left:.5rem;background:var(--ember-d);color:var(--txt-b);border:none;border-radius:3px;padding:.3rem .8rem;cursor:pointer;font-family:var(--fb);font-size:.85rem">Reload page</button></div>`;
+}
+
+// ── FILTERS ──
+function setSchool(s){curSchool=s;document.querySelectorAll('.nsubitem').forEach(n=>n.classList.toggle('active',n.dataset.school===s));if(curPage==='spells')rSpells()}
+function setLevel(l,btn){curLevel=l;document.querySelectorAll('.lp').forEach(p=>p.classList.remove('active'));btn.classList.add('active');if(curPage==='spells')rSpells()}
+function toggleCard(el){el.classList.toggle('open')}
+function hl(t,q){if(!q)return t;return t.replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark>$1</mark>')}
+
+// ── SEARCH INDEX ──
+let idx=null, sacts={};
+function buildIdx(){
+  const a=[];
+  SPELLS.filter(sp=>sp.level<=SPELL_LEVEL_CAP).forEach(sp=>a.push({type:'Spell',pg:'spells',ico:'◎',name:sp.name,sub:SCHOOLS.find(s=>s.id===sp.school)?.name+' · Lvl '+sp.level,body:sp.desc+' '+(sp.upcast||''),go:()=>{showPage('spells');setSchool(sp.school)}}));
+  STATS.forEach(s=>a.push({type:'Stat',pg:'stats',ico:'◈',name:s.name,sub:s.abbr,body:s.desc,go:()=>showPage('stats')}));
+  SKILLS.forEach(g=>g.skills.forEach(sk=>a.push({type:'Skill',pg:'stats',ico:'◈',name:sk,sub:g.stat,body:sk+' '+g.stat,go:()=>showPage('stats')})));
+  ACTIONS.forEach(ac=>a.push({type:'Action',pg:'actions',ico:'⬡',name:ac.name,sub:'Actions',body:ac.desc+' '+(ac.note||''),go:()=>showPage('actions')}));
+  if(typeof COMBAT_GUIDE!=='undefined'){
+    COMBAT_GUIDE.weaponPath.concat(COMBAT_GUIDE.spellPath).forEach(s=>a.push({type:'Combat Guide',pg:'combatguide',ico:'🧭',name:s.step,sub:'Combat Guide',body:s.desc,go:()=>showPage('combatguide')}));
+    COMBAT_GUIDE.resolution.forEach(s=>a.push({type:'Combat Guide',pg:'combatguide',ico:'🧭',name:s.name,sub:'Combat Guide',body:s.desc,go:()=>showPage('combatguide')}));
+    COMBAT_GUIDE.reactions.forEach(s=>a.push({type:'Combat Guide',pg:'combatguide',ico:'🧭',name:s.name,sub:'Reducing Damage',body:s.desc,go:()=>showPage('combatguide')}));
+  }
+  DEEP_WOUND_TABLE.forEach(w=>a.push({type:'Wound',pg:'wounds',ico:'✕',name:w.type,sub:'Roll '+w.roll,body:w.effect+' '+w.flavor,go:()=>showPage('wounds')}));
+  MELEE_WEAPONS.forEach(w=>a.push({type:'Weapon',pg:'weapons',ico:'⚔',name:w.name,sub:w.ability,body:w.feature,go:()=>showPage('weapons')}));
+  RANGED_WEAPONS.forEach(w=>a.push({type:'Weapon',pg:'weapons',ico:'⚔',name:w.name,sub:w.ability,body:w.feature,go:()=>showPage('weapons')}));
+  WEAPON_MATERIALS.forEach(m=>a.push({type:'Material',pg:'weapons',ico:'⬡',name:m.name,sub:m.effective,body:m.effect+' '+m.reason,go:()=>showPage('weapons')}));
+  if(typeof WEAPON_ARTS!=='undefined') WEAPON_ARTS.forEach(ar=>a.push({type:'Art',pg:'arts',ico:'🗡',name:ar.name,sub:'Weapon Art',body:ar.desc+' '+ar.weapons.join(' '),go:()=>showPage('arts')}));
+  if(typeof OTHER_ARTS!=='undefined') OTHER_ARTS.forEach(ar=>a.push({type:'Art',pg:'arts',ico:'🗡',name:ar.name,sub:'Art',body:ar.desc,go:()=>showPage('arts')}));
+  CREATURE_TYPES.forEach(c=>a.push({type:'Creature',pg:'creatures',ico:'☽',name:c.name,sub:c.material,body:c.desc,go:()=>showPage('creatures')}));
+  OIL_TABLES.forEach(ot=>ot.oils.forEach(o=>a.push({type:'Oil',pg:'oils',ico:'🜁',name:o.name,sub:ot.creature,body:o.effect+' '+o.components,go:()=>showPage('oils')})));
+  POISON_TABLES.forEach(pt=>pt.poisons.forEach(p=>a.push({type:'Poison',pg:'poisons',ico:'⚗',name:p.name,sub:'Tier '+pt.tier,body:p.effect+' '+p.components,go:()=>showPage('poisons')})));
+  MAGIC_THEORY.forEach(m=>a.push({type:'Theory',pg:'magic',ico:'✦',name:m.name,sub:'Magic Theory',body:m.desc,go:()=>showPage('magic')}));
+  if(typeof ETHER_STRAINS!=='undefined') ETHER_STRAINS.forEach(s=>a.push({type:'Ether',pg:'ether',ico:'◇',name:s.name,sub:s.subtitle,body:s.lore+' '+s.consumed.tiers.map(t=>t.text).join(' ')+' '+s.focus.tiers.map(t=>t.text).join(' '),go:()=>showPage('ether')}));
+  if(typeof CLASSES!=='undefined') CLASSES.forEach(c=>{a.push({type:'Class',pg:'classes',ico:'◉',name:c.name,sub:c.tagline,body:c.desc,go:()=>{showPage('classes');rClasses()}});c.tiers.forEach(t=>t.skills.forEach(sk=>a.push({type:'Class Skill',pg:'classes',ico:'◉',name:sk.name,sub:c.name,body:sk.desc,go:()=>{showPage('classes');rClasses()}})))});
+  if(typeof SUBCLASSES!=='undefined') SUBCLASSES.forEach(sc=>{a.push({type:'Subclass',pg:'subclasses',ico:'◈',name:sc.name,sub:sc.tagline,body:sc.desc,go:()=>{showPage('subclasses');rSubclasses()}});(sc.skills||[]).forEach(sk=>a.push({type:'Subclass Skill',pg:'subclasses',ico:'◈',name:sk.name,sub:sc.name,body:sk.desc,go:()=>{showPage('subclasses');rSubclasses()}}))});
+  if(typeof BACKGROUNDS!=='undefined') BACKGROUNDS.forEach(bg=>{a.push({type:'Background',pg:'backgrounds',ico:'✎',name:bg.name,sub:bg.tagline,body:bg.desc+' '+bg.proficiencies,go:()=>{showPage('backgrounds');rBackgrounds()}});(bg.features||[]).forEach(f=>a.push({type:'Background Feature',pg:'backgrounds',ico:'✎',name:f.name,sub:bg.name,body:f.desc,go:()=>{showPage('backgrounds');rBackgrounds()}}))});
+  SPELL_MECHANICS.forEach(m=>a.push({type:'Rule',pg:'spellrules',ico:'⟳',name:m.name,sub:'Spell Mechanics',body:m.desc,go:()=>showPage('spellrules')}));
+  CONCENTRATION_RULES.forEach(m=>a.push({type:'Rule',pg:'spellrules',ico:'⟳',name:m.name,sub:'Concentration',body:m.desc,go:()=>showPage('spellrules')}));
+  COMBAT_RULES.forEach(r=>a.push({type:'Rule',pg:'actions',ico:'⬡',name:r.name,sub:'Combat Rules',body:r.desc,go:()=>showPage('actions')}));
+  return a;
+}
+function doSearch(val){
+  if(!idx) idx=buildIdx();
+  const q=val.trim().toLowerCase(), dd=document.getElementById('sdrop');
+  if(!q){dd.innerHTML='';dd.classList.remove('open');return}
+  const res=idx.filter(it=>(it.name+' '+it.body+' '+it.sub).toLowerCase().includes(q)).slice(0,45);
+  if(!res.length){dd.innerHTML='<div class="sd-none">No results.</div>';dd.classList.add('open');return}
+  const grps={};res.forEach(r=>{if(!grps[r.type])grps[r.type]=[];grps[r.type].push(r)});
+  sacts={};let html='',n=0;
+  Object.entries(grps).forEach(([type,items])=>{
+    html+=`<div class="sd-hd">${type}s</div>`;
+    items.forEach(item=>{const k='k'+n++;sacts[k]=item.go;html+=`<div class="sd-row" onclick="sacts['${k}']()"><span class="sd-ico">${item.ico}</span><span class="sd-name">${hl(item.name,q)}</span><span class="sd-sub">${item.sub}</span></div>`});
+  });
+  dd.innerHTML=html;dd.classList.add('open');
+}
+function openDrop(){const v=document.getElementById('gsearch').value;if(v.trim())doSearch(v)}
+function closeDrop(){document.getElementById('sdrop').classList.remove('open')}
+document.addEventListener('click',e=>{if(!document.getElementById('swrap').contains(e.target))closeDrop()});
+
+// ── SUBNAV ──
+function buildSubnav(){
+  document.getElementById('school-subnav').innerHTML=SCHOOLS.map(s=>`<button class="nsubitem" data-school="${s.id}" onclick="showPage('spells');setSchool('${s.id}')">${s.name}</button>`).join('');
+}
+
+// ── HOME ──
+function buildHome(){
+  const cards=[
+    {i:'✦',t:'Magic Theory',  d:'The Source strings. Physics of spellcasting.',      pg:'magic'},
+    {i:'⟳',t:'Spell Mechanics',d:'Auto-hit damage, threshold saves, concentration.',   pg:'spellrules'},
+    {i:'◎',t:'Spells',         d:'Nine schools. Components, costs, and upcasting.',    pg:'spells'},
+    {i:'🧭',t:'Combat Guide',   d:'How a hit resolves, step by step, plus a flowchart.', pg:'combatguide'},
+    {i:'⬡',t:'Actions',        d:'Actions, reactions, movement, flanking.',            pg:'actions'},
+    {i:'✕',t:'Wounds',         d:'Surface, deep wounds, and the d10 wound table.',     pg:'wounds'},
+    {i:'◈',t:'Stats & Skills', d:'Eight core attributes and their governing skills.',  pg:'stats'},
+    {i:'⚔',t:'Weapons',        d:'Melee, ranged, range rules, and materials.',         pg:'weapons'},
+    { i:'🛡', t:'Armors', d:'Different base armors', pg:'armors' },
+    {i:'🗡',t:'Arts',          d:'Weapon families, dodge, armor, shield, focus, tools.', pg:'arts'},
+    {i:'☽',t:'Creature Types', d:'Fourteen categories with material & oil weaknesses.',pg:'creatures'},
+    {i:'🜁',t:'Monster Oils',   d:'Tier 1–3 oils for every creature type.',            pg:'oils'},
+    {i:'⚗',t:'Poisons',        d:'Tier 1–4. Effects, components, and costs.',         pg:'poisons'},
+    {i:'◇',t:'Ether Cores',    d:'Four strains. Consume for power or infuse a focus.', pg:'ether'},
+    {i:'◉',t:'Classes',        d:'Rogue, Fighter, Gunslinger, Source Weaver.',         pg:'classes'},
+    {i:'◈',t:'Subclasses',     d:'Universal specialisations available to all classes.',pg:'subclasses'},
+    {i:'✎',t:'Backgrounds',    d:'Your history, contacts, and starting resources.',    pg:'backgrounds'},
+  ];
+  document.getElementById('hgrid').innerHTML=cards.map(c=>`<div class="hcard" onclick="showPage('${c.pg}')"><span class="hci">${c.i}</span><div class="hct">${c.t}</div><div class="hcd">${c.d}</div><span class="hcb bl">Available</span></div>`).join('');
+}
+
+// ── SPELLS ──
+function rSpells(){
+  const out=document.getElementById('spell-out');
+  // Build level pills from cap if not yet built
+  const pills=document.getElementById('level-pills');
+  if(!pills.dataset.built){
+    pills.dataset.built=1;
+    let h=`<button class="lp active" onclick="setLevel('all',this)">All</button>`;
+    for(let i=1;i<=SPELL_LEVEL_CAP;i++) h+=`<button class="lp" onclick="setLevel('${i}',this)">Lvl ${i}</button>`;
+    pills.innerHTML=h;
+  }
+  let fl=SPELLS.filter(sp=>sp.level<=SPELL_LEVEL_CAP&&(curSchool==='all'||sp.school===curSchool)&&(curLevel==='all'||String(sp.level)===curLevel));
+  document.getElementById('scount').innerHTML=`Showing <strong>${fl.length}</strong> spell${fl.length!==1?'s':''}`;
+  if(!fl.length){out.innerHTML='<div class="empty"><strong>Nothing Found</strong>No spells match.</div>';return}
+  const g={};fl.forEach(sp=>{if(!g[sp.school])g[sp.school]={};if(!g[sp.school][sp.level])g[sp.school][sp.level]=[];g[sp.school][sp.level].push(sp)});
+  let html='';
+  SCHOOLS.forEach(sch=>{
+    if(!g[sch.id])return;
+    html+=`<div class="schblk"><div class="schhdr"><span class="schico">${sch.icon}</span><span class="schnm">${sch.name}</span><span class="schtag">- ${sch.tagline}</span></div>`;
+    Object.keys(g[sch.id]).sort((a,b)=>a-b).forEach(lvl=>{
+      html+=`<div class="lvldiv"><span class="lvllbl">Level ${lvl}</span><span class="lvlline"></span></div>`;
+      g[sch.id][lvl].forEach(sp=>html+=spCard(sp));
+    });
+    html+='</div>';
+  });
+  out.innerHTML=html;
+}
+function spCard(sp){
+  const comps=sp.components.map(c=>`<div class="comp"><span class="ct">${c.type}</span><span class="csep">·</span><span class="cd">${c.time}</span><span class="csep">·</span><span class="cs">${c.succ} succ</span></div>`).join('');
+  const up=sp.upcast?`<div class="spup"><span class="spuplbl">Upcast</span>${sp.upcast}</div>`:`<div class="spnoup">Cannot be upcast.</div>`;
+  const dmg=sp.dmgType?`<div class="spmi"><b>Damage</b>${sp.dmgType}</div>`:'';
+  const dmgBdg=sp.dmgType?`<span class="spdmgbdg">${sp.dmgType}</span>`:'';
+  return`<div class="spcard" onclick="toggleCard(this)"><div class="sphdr"><span class="spnm">${sp.name}</span>${dmgBdg}<span class="spbdg">${sp.cost}</span><span class="sparr">▾</span></div><div class="spbody"><div class="comps">${comps}</div><div class="spmeta"><div class="spmi"><b>Duration</b>${sp.duration}</div><div class="spmi"><b>Range</b>${sp.range}</div><div class="spmi"><b>Level</b>${sp.level}</div>${dmg}</div><p class="spdesc">${sp.desc}</p>${up}</div></div>`;
+}
+
+// ── MAGIC THEORY ──
+function rMagic(){const el=document.getElementById('magic-body');if(el.dataset.r)return;el.dataset.r=1;el.innerHTML=`<div class="tgrid">${MAGIC_THEORY.map(t=>`<div class="tcard"><div class="tcn">${t.name}</div><div class="tcd">${t.desc}</div></div>`).join('')}</div>`}
+
+// ── SPELL MECHANICS ──
+function rSpellRules(){
+  const el=document.getElementById('spellrules-body');if(el.dataset.r)return;el.dataset.r=1;
+  const defRow=(stat,roll)=>`<tr><td style="color:var(--txt-b);font-family:var(--ft);font-size:.79rem">${stat}</td><td style="color:var(--ember)">${roll}</td></tr>`;
+  const concRow=(event,dc,succ)=>`<tr><td style="color:var(--txt-b);font-family:var(--ft);font-size:.79rem">${event}</td><td style="color:var(--ember)">${dc}</td><td style="color:var(--gold)">${succ}</td></tr>`;
+  el.innerHTML=`
+    <div class="section">
+      <div class="stitle">Damage spells - auto-hit</div>
+      <div class="slead">Spells never miss. A damage spell lands automatically. There is no automatic defensive roll: reduction only happens if the target reacts.</div>
+      ${SPELL_MECHANICS.slice(0,6).map(m=>`<div class="rcard"><div class="rn">${m.name}</div><div class="rd">${m.desc}</div></div>`).join('')}
+      <div class="tscroll" style="margin-top:.85rem"><table class="table">
+        <thead><tr><th>Damage type</th><th>Reaction needed</th></tr></thead>
+        <tbody>
+          ${defRow('Physical force, kinetic','Brace')}
+          ${defRow('Heat or fire','Brace')}
+          ${defRow('Cold or frost','Brace')}
+          ${defRow('Poison or decay','Brace')}
+          ${defRow('Radiant or solar','Brace')}
+          ${defRow('Mental or psychic','Strengthen Psyche')}
+          ${defRow('Fear','Strengthen Psyche')}
+          ${defRow('Stated: no save / no reduction','No reaction helps - full damage')}
+        </tbody>
+      </table></div>
+      <div class="ibox" style="margin-top:.7rem">Dodge and Block can supplement a Brace-eligible spell where the GM rules footwork or a shield would plausibly help. No reaction of any kind is guaranteed to work against every spell: the GM has final say.</div>
+    </div>
+    <div class="section">
+      <div class="stitle">Pass-fail spells - the threshold</div>
+      <div class="ibox"><strong>Successes needed to resist</strong> = caster's points in spellcasting Focus skill</div>
+      ${SPELL_MECHANICS.slice(6).map(m=>`<div class="rcard"><div class="rn">${m.name}</div><div class="rd">${m.desc}</div></div>`).join('')}
+    </div>
+    <div class="section">
+      <div class="stitle">Concentration - casting</div>
+      ${CONCENTRATION_RULES.slice(0,2).map(m=>`<div class="rcard"><div class="rn">${m.name}</div><div class="rd">${m.desc}</div></div>`).join('')}
+    </div>
+    <div class="section">
+      <div class="stitle">Concentration - sustaining spells</div>
+      <div class="ibox">You may concentrate on <strong>any number of spells simultaneously.</strong> Each costs spell points equal to its level per round. No action required: cost is paid at the start of your turn.</div>
+      <div class="tscroll" style="margin-top:.85rem"><table class="table">
+        <thead><tr><th>Wound received</th><th>Check DC</th><th>Successes needed</th></tr></thead>
+        <tbody>
+          ${concRow('Shallow wound','6','Equal to spell level')}
+          ${concRow('Deep wound','8','Equal to spell level')}
+          ${concRow('Lose mental faculties','Automatic failure','No check - spell ends')}
+        </tbody>
+      </table></div>
+      <div class="slead" style="margin-top:.85rem">Roll: Focus + spellcasting ability. One check per spell per wounding instance.</div>
+      ${CONCENTRATION_RULES.slice(2).map(m=>`<div class="rcard"><div class="rn">${m.name}</div><div class="rd">${m.desc}</div></div>`).join('')}
+    </div>`;
+}
+
+// ── COMBAT GUIDE ──
+function rCombatGuide(){
+  const el=document.getElementById('combatguide-body');if(el.dataset.r)return;el.dataset.r=1;
+  const node=(t,d,accent)=>`<div class="flow-node${accent?' fn-accent':''}"><div class="fn-t">${t}</div><div class="fn-d">${d}</div></div>`;
+  const arrow=`<div class="flow-arrow">↓</div>`;
+  const chain=(arr)=>arr.map((s,i)=>node(s.step||s.name,s.desc)+(i<arr.length-1?arrow:'')).join('');
+  el.innerHTML=`
+    <div class="section">
+      <div class="stitle">The Flow of Combat</div>
+      <div class="slead">${COMBAT_GUIDE.intro}</div>
+      <div class="flow">
+        ${node('Choose Your Action','Attack with a weapon, or cast a spell / create an effect.',true)}
+        ${arrow}
+        <div class="flow-split">
+          <div><div class="flow-col-lbl">Weapon Attack</div>${chain(COMBAT_GUIDE.weaponPath)}</div>
+          <div><div class="flow-col-lbl">Cast a Spell / Effect</div>${chain(COMBAT_GUIDE.spellPath)}</div>
+        </div>
+        ${arrow}
+        ${chain(COMBAT_GUIDE.resolution)}
+      </div>
+    </div>
+    <div class="section">
+      <div class="stitle">Reducing Incoming Damage</div>
+      <div class="slead">${COMBAT_GUIDE.note}</div>
+      ${COMBAT_GUIDE.reactions.map(r=>`<div class="rcard"><div class="rn">${r.name}<span style="margin-left:auto;font-size:.7rem;color:var(--txt-m);font-weight:400">${r.cost}</span></div><div class="rd">${r.desc}</div></div>`).join('')}
+    </div>`;
+}
+
+// ── ACTIONS ──
+function rActions(){
+  const el=document.getElementById('actions-body');if(el.dataset.r)return;el.dataset.r=1;
+  let h=`<div class="ibox"><strong>Starting Resources</strong> - Each adventurer begins their turn with: <strong>1 Action, 1 Half Action, Movement,</strong> and <strong>1 Interact</strong>. These improve via class levels, backgrounds, and race.</div><div class="section">`;
+  ACTIONS.forEach(a=>{
+    const subs=a.sub?`<div class="rsub">${a.sub.map(s=>`<div class="rsub-item"><span class="rsub-name">${s.name}</span>${s.desc}</div>`).join('')}</div>`:'';
+    const note=a.note?`<div class="rnote">${a.note}</div>`:'';
+    h+=`<div class="rcard"><div class="rn"><span class="rico">${a.icon}</span>${a.name}</div><div class="rd">${a.desc}</div>${subs}${note}</div>`;
+  });
+  h+=`</div><div class="section"><div class="stitle">Combat Rules</div>`;
+  COMBAT_RULES.forEach(r=>h+=`<div class="rcard"><div class="rn">${r.name}</div><div class="rd">${r.desc}</div></div>`);
+  h+='</div>';el.innerHTML=h;
+  h+=`</div><div class="section"><div class="stitle">Combat Actions</div>`;
+  COMBAT_Actions.forEach(r=>h+=`<div class="rcard"><div class="rn">${r.name}</div><div class="rd">${r.desc}</div></div>`);
+  h+='</div>';el.innerHTML=h;
+}
+
+// ── WOUNDS ──
+function rWounds(){
+  const el=document.getElementById('wounds-body');if(el.dataset.r)return;el.dataset.r=1;
+  const w=WOUND_RULES;
+  el.innerHTML=`
+    <div class="section"><div class="stitle">Physical Wounds</div>
+      <div class="ibox">${w.physical.intro}</div>
+      <div class="rcard"><div class="rn">Shallow Wound</div><div class="rd">${w.physical.shallow}</div></div>
+      <div class="rcard"><div class="rn">Deep Wound</div><div class="rd">${w.physical.deep}</div></div>
+      <div class="rcard"><div class="rn">Stabilizing a Deep Wound</div><div class="rd">${w.physical.stabilize}</div></div>
+    </div>
+    <div class="section"><div class="stitle">Deep Wound Table <span style="font-weight:400;font-size:.74rem;color:var(--txt-m)">- Roll d10 when receiving a deep wound</span></div>
+      <div class="tscroll"><table class="wtbl">
+        <thead><tr><th style="width:38px">d10</th><th>Wound Type</th><th>Effect</th></tr></thead>
+        <tbody>${DEEP_WOUND_TABLE.map(w=>`<tr><td class="wroll">${w.roll}</td><td><div class="wtype">${w.type}</div><div class="wflav">${w.flavor}</div></td><td><div class="weff">${w.effect}</div></td></tr>`).join('')}</tbody>
+      </table></div>
+    </div>
+    <div class="section"><div class="stitle">Mental Wounds</div>
+      <div class="ibox">${w.mental.intro}</div>
+      <div class="rcard"><div class="rn">Recovery</div><div class="rd">${w.mental.note}</div></div>
+    </div>`;
+}
+
+// ── STATS ──
+function rStats(){
+  const el=document.getElementById('stats-body');if(el.dataset.r)return;el.dataset.r=1;
+  el.innerHTML=`
+    <div class="section"><div class="stitle">Core Attributes</div>
+      <div class="sgrid">${STATS.map(s=>`<div class="scard"><div class="sabb">${s.abbr}</div><div class="sname">${s.name}</div><div class="sdesc">${s.desc}</div></div>`).join('')}</div>
+    </div>
+    <div class="section"><div class="stitle">Skills</div>
+      <div class="slead">Tied to their governing attribute. When making a skill check, roll dice from the relevant stat plus the skill modifier.</div>
+      ${SKILLS.map(g=>`<div class="skgroup"><div class="skstat">${g.stat}</div><div class="sktags">${g.skills.map(sk=>`<span class="sktag">${sk}</span>`).join('')}</div></div>`).join('')}
+    </div>`;
+}
+
+// ── WEAPONS ──
+function rWeapons(){
+  const el=document.getElementById('weapons-body');if(el.dataset.r)return;el.dataset.r=1;
+  el.innerHTML=`
+    <div class="section"><div class="stitle">Melee Weapons</div>
+      <div class="tscroll"><table class="table"><thead><tr><th>Weapon</th><th>Ability</th><th>Dice</th><th>Block</th><th>Range</th><th>Feature</th></tr></thead>
+      <tbody>${MELEE_WEAPONS.map(w=>`<tr><td><span class="wn">${w.name}</span></td><td>${w.ability}</td><td><span class="wd">${w.dice>0?w.dice+'d10':'-'}</span></td><td><span class="wb">${w.block}</span></td><td>${w.range}</td><td style="color:var(--txt-m);font-size:.79rem">${w.feature}</td></tr>`).join('')}</tbody></table></div>
+      <div class="ibox" style="margin-top:.7rem">Attacking a target at <strong>short range</strong> gives them +1 DC on block. A shield negates this.</div>
+    </div>
+    <div class="section"><div class="stitle">Ranged Weapons</div>
+      <div class="tscroll"><table class="table"><thead><tr><th>Weapon</th><th>Ability</th><th>Dice</th><th>Range</th><th>Prereq</th><th>Feature</th></tr></thead>
+      <tbody>${RANGED_WEAPONS.map(w=>`<tr><td><span class="wn">${w.name}</span></td><td>${w.ability}</td><td><span class="wd">${w.dice>0?w.dice+'d10':'-'}</span></td><td style="font-size:.79rem;color:var(--txt-m)">${w.range}</td><td style="font-size:.79rem">${w.prereq}</td><td style="color:var(--txt-m);font-size:.79rem">${w.feature}</td></tr>`).join('')}</tbody></table></div>
+    </div>
+    <div class="section"><div class="stitle">Range Penalties</div>
+      <div class="tscroll"><table class="table"><thead><tr><th>Range Band</th><th>Penalty</th></tr></thead>
+      <tbody>${RANGE_RULES.map(r=>`<tr><td>${r.range}</td><td style="color:var(--ember)">${r.penalty}</td></tr>`).join('')}</tbody></table></div>
+      <div class="ibox" style="margin-top:.7rem"><strong>Cover:</strong> +1 DC per level of cover. &nbsp; <strong>Moving Target:</strong> +1 DC if target moved last turn. &nbsp; <strong>Aim:</strong> Spend a half action to reduce DC by 1 on next ranged attack.</div>
+    </div>
+    <div class="section"><div class="stitle">Weapon Materials</div>
+      <div class="slead">Different materials are effective against specific creature types. The wrong material against a supernatural creature may deal no meaningful damage.</div>
+      ${WEAPON_MATERIALS.map(m=>`<div class="mcard"><div class="mname">${m.name}</div><div class="meff-vs">Effective vs: ${m.effective}</div><div class="meff">${m.effect}</div><div class="mreason">${m.reason}</div></div>`).join('')}
+      <div class="ibox" style="margin-top:.7rem">${MATERIAL_GAPS}</div>
+    </div>`;
+}
+function rArmors(){
+  const el = document.getElementById('armors-body');
+  if(el.dataset.r) return;
+  el.dataset.r = 1;
+
+  el.innerHTML = `
+    <div class="section">
+      <div class="stitle">Armors</div>
+
+      <div class="tscroll"><table class="table">
+        <thead>
+          <tr>
+            <th>Armor</th>
+            <th>Category</th>
+            <th>Slashing</th>
+            <th>Bludgeoning</th>
+            <th>Piercing</th>
+            <th>Features</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${ARMORS.map(w => `
+            <tr>
+              <td><span class="wn">${w.name}</span></td>
+              <td>${w.Category}</td>
+              <td>${w.Slashing}</td>
+              <td>${w.Bludgeoning}</td>
+              <td>${w.Piercing}</td>
+              <td style="color:var(--txt-m);font-size:.79rem">${w.Features}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table></div>
+
+      <div class="ibox" style="margin-top:.7rem">
+        Alacrity- Once a turn you may take the dodge action for free. Any unarmored person also gains this feature.
+      </div>
+      <div class="ibox" style="margin-top:.7rem">
+        Loud-Any stealth checks made while wearing equipment with this feature increases the stealth dc by the amount in the parentheses. 
+      </div>
+      <div class="ibox" style="margin-top:.7rem">
+        Encumber sum- Wearing this kind of equipment makes it harder to move for longer duration. Thus any athletics checks made for sprints are made with +2 dc. When moving through difficult terrain your movement is quartered. And standing up from pron costs an action
+      </div>
+    </div>
+  `;
+}
+
+// ── ARTS ──
+function rArts(){
+  const el=document.getElementById('arts-body');if(el.dataset.r)return;el.dataset.r=1;
+  const meleeRow=w=>`<tr><td><span class="wn">${w.name}</span></td><td>${w.ability}</td><td><span class="wd">${w.dice>0?w.dice+'d10':'-'}</span></td><td><span class="wb">${w.block}</span></td><td>${w.range}</td><td style="color:var(--txt-m);font-size:.79rem">${w.feature}</td></tr>`;
+  const rangedRow=w=>`<tr><td><span class="wn">${w.name}</span></td><td>${w.ability}</td><td><span class="wd">${w.dice>0?w.dice+'d10':'-'}</span></td><td style="font-size:.79rem;color:var(--txt-m)">${w.range}</td><td style="font-size:.79rem">${w.prereq}</td><td style="color:var(--txt-m);font-size:.79rem">${w.feature}</td></tr>`;
+  let h=`<div class="section"><div class="stitle">Weapon Arts</div>
+    <div class="slead">Every weapon family is its own art. Investing in a weapon's art reflects years spent mastering its specific weight, reach, and rhythm, not just picking it up and swinging.</div>`;
+  WEAPON_ARTS.forEach(cat=>{
+    const meleeRows=cat.weapons.map(n=>MELEE_WEAPONS.find(w=>w.name===n)).filter(Boolean);
+    const rangedRows=cat.weapons.map(n=>RANGED_WEAPONS.find(w=>w.name===n)).filter(Boolean);
+    h+=`<div class="mcard"><div class="mname">${cat.name}</div><div class="meff">${cat.desc}</div>`;
+    if(meleeRows.length) h+=`<div class="tscroll" style="margin-top:.6rem"><table class="table"><thead><tr><th>Weapon</th><th>Ability</th><th>Dice</th><th>Block</th><th>Range</th><th>Feature</th></tr></thead><tbody>${meleeRows.map(meleeRow).join('')}</tbody></table></div>`;
+    if(rangedRows.length) h+=`<div class="tscroll" style="margin-top:.6rem"><table class="table"><thead><tr><th>Weapon</th><th>Ability</th><th>Dice</th><th>Range</th><th>Prereq</th><th>Feature</th></tr></thead><tbody>${rangedRows.map(rangedRow).join('')}</tbody></table></div>`;
+    h+=`</div>`;
+  });
+  h+=`</div>`;
+  h+=`<div class="section"><div class="stitle">Defensive &amp; Utility Arts</div>`;
+  OTHER_ARTS.forEach(a=>{
+    h+=`<div class="rcard"><div class="rn">${a.name}</div><div class="rd">${a.desc}</div>`;
+    if(a.name==='Art of Shield'){
+      const sh=MELEE_WEAPONS.find(w=>w.name==='Shield');
+      if(sh) h+=`<div class="tscroll" style="margin-top:.6rem"><table class="table"><thead><tr><th>Weapon</th><th>Ability</th><th>Dice</th><th>Block</th><th>Range</th><th>Feature</th></tr></thead><tbody>${meleeRow(sh)}</tbody></table></div>`;
+    }
+    h+=`</div>`;
+  });
+  h+=`</div>`;
+  el.innerHTML=h;
+}
+
+// ── CREATURES ──
+function rCreatures(){
+  const el=document.getElementById('creatures-body');if(el.dataset.r)return;el.dataset.r=1;
+  el.innerHTML=`<div class="cgrid">${CREATURE_TYPES.map(c=>`<div class="ccard"><div class="ccn">${c.name}</div><div class="ccd">${c.desc}</div><div class="cctags"><span class="cct mat">⬡ ${c.material}</span><span class="cct oil">🜁 ${c.oil}</span></div></div>`).join('')}</div>`;
+}
+
+// ── OILS ──
+function rOils(){
+  const el=document.getElementById('oils-body');if(el.dataset.r)return;el.dataset.r=1;
+  const tc=['','t1','t2','t3'];
+  let h=`<div class="section"><div class="stitle">Components</div>
+    <div class="rcard"><div class="rn">Primary Bases</div><div class="rd">${OIL_COMPONENTS.bases.join('<br>')}</div></div>
+    <div class="rcard"><div class="rn">Stabilizers</div><div class="rd">${OIL_COMPONENTS.stabilizers.join('<br>')}</div></div>
+    <div class="rcard"><div class="rn">Enhancers</div><div class="rd">${OIL_COMPONENTS.enhancers.join('<br>')}</div></div>
+  </div><div class="section"><div class="stitle">Oils by Creature Type</div>`;
+  OIL_TABLES.forEach(ot=>{
+    h+=`<div class="cblk"><div class="clabel">${ot.creature}</div><div class="tscroll"><table class="ctbl"><thead><tr><th>Tier</th><th>Name</th><th>Components</th><th>Effect</th><th>Duration</th><th>DC</th></tr></thead><tbody>${ot.oils.map(o=>`<tr><td><span class="tier ${tc[o.tier]}">T${o.tier}</span></td><td style="color:var(--txt-b);white-space:nowrap">${o.name}</td><td style="color:var(--txt-m);font-size:.78rem">${o.components}</td><td>${o.effect}</td><td style="white-space:nowrap">${o.duration}</td><td style="white-space:nowrap;color:var(--ember)">${o.dc}</td></tr>`).join('')}</tbody></table></div></div>`;
+  });
+  h+=`</div><div class="section"><div class="stitle">Crafting</div>
+    <div class="tscroll" style="max-width:300px"><table class="table"><thead><tr><th>Tier</th><th>Time</th></tr></thead><tbody>${OIL_CRAFT_RULES.map(r=>`<tr><td><span class="tier ${tc[r.tier]}">T${r.tier}</span></td><td>${r.time}</td></tr>`).join('')}</tbody></table></div>
+    <div style="margin-top:1rem">${OIL_SKILL_BONUSES.map(b=>`<div class="rcard" style="margin-bottom:2px"><div class="rn">${b.skill}</div><div class="rd">${b.bonus}</div></div>`).join('')}</div>
+  </div>`;
+  el.innerHTML=h;
+}
+
+// ── POISONS ──
+function rPoisons(){
+  const el=document.getElementById('poisons-body');if(el.dataset.r)return;el.dataset.r=1;
+  const tc=['','t1','t2','t3','t4'];
+  let h=`<div class="section"><div class="stitle">Poison Recipes</div>`;
+  POISON_TABLES.forEach(pt=>{
+    h+=`<div class="cblk"><div class="clabel">Tier ${pt.tier}</div><div class="tscroll"><table class="ctbl"><thead><tr><th>Name</th><th>Components</th><th>Effect</th><th>Duration</th><th>DC</th></tr></thead><tbody>${pt.poisons.map(p=>`<tr><td style="color:var(--txt-b);white-space:nowrap">${p.name}</td><td style="color:var(--txt-m);font-size:.78rem">${p.components}</td><td>${p.effect}</td><td style="white-space:nowrap">${p.duration}</td><td style="color:var(--ember);white-space:nowrap">${p.dc}</td></tr>`).join('')}</tbody></table></div></div>`;
+  });
+  h+=`</div><div class="section"><div class="stitle">Crafting Times &amp; Skills</div>
+    <div class="tscroll" style="max-width:300px;margin-bottom:1rem"><table class="table"><thead><tr><th>Tier</th><th>Time</th></tr></thead><tbody>${POISON_CRAFT_RULES.map(r=>`<tr><td><span class="tier ${tc[r.tier]}">T${r.tier}</span></td><td>${r.time}</td></tr>`).join('')}</tbody></table></div>
+    ${POISON_SKILL_BONUSES.map(b=>`<div class="rcard" style="margin-bottom:2px"><div class="rn">${b.skill}</div><div class="rd">${b.bonus}</div></div>`).join('')}
+  </div><div class="section"><div class="stitle">Component Costs</div>
+    <div class="tscroll"><table class="table"><thead><tr><th>Component</th><th>Cost</th><th>Rarity</th></tr></thead><tbody>${POISON_COMPONENTS.map(c=>`<tr><td>${c.name}</td><td style="color:var(--gold)">${c.cost}</td><td style="color:var(--txt-m)">${c.rarity}</td></tr>`).join('')}</tbody></table></div>
+  </div>`;
+  el.innerHTML=h;
+}
+
+// ── CLASSES ──
+// Auto-layout a prereq graph into tiers (columns) x lanes (rows) for the tree view.
+// A skill reuses its prereq's lane when free that tier (a straight continuation);
+// otherwise it forks into a new lane. prereq2 is drawn as an extra dashed merge line.
+function buildTreeLayout(c){
+  const bySkill={};
+  c.tiers.forEach((t,ti)=>t.skills.forEach(sk=>{bySkill[sk.name]={tierIdx:ti,skill:sk};}));
+  const laneOf={};
+  const nodes=[];
+  const edges=[];
+  let nextLane=0;
+  c.tiers.forEach((t,ti)=>{
+    const usedThisTier=new Set();
+    t.skills.forEach(sk=>{
+      let lane;
+      const p=sk.prereq;
+      if(p && laneOf[p]!==undefined && !usedThisTier.has(laneOf[p])) lane=laneOf[p];
+      else lane=nextLane++;
+      usedThisTier.add(lane);
+      laneOf[sk.name]=lane;
+      nodes.push({name:sk.name,tierIdx:ti,lane,skill:sk});
+      if(p && bySkill[p]) edges.push({from:p,to:sk.name,dashed:false});
+      if(sk.prereq2 && bySkill[sk.prereq2]) edges.push({from:sk.prereq2,to:sk.name,dashed:true});
+    });
+  });
+  const posOf={};nodes.forEach(n=>posOf[n.name]=n);
+  return{nodes,edges,lanesCount:nextLane,posOf};
+}
+function renderClassTree(c){
+  const layout=buildTreeLayout(c);
+  const colW=196,rowH=84,nodeW=172,nodeMidY=27;
+  const width=c.tiers.length*colW;
+  const height=Math.max(layout.lanesCount*rowH,rowH);
+  const nodesHTML=layout.nodes.map(n=>{
+    const left=n.tierIdx*colW,top=n.lane*rowH;
+    const costLbl=n.skill.cost>0?`${n.skill.cost} pt${n.skill.cost!==1?'s':''}`:'free';
+    const nm=n.name.replace(/"/g,'&quot;');
+    return`<div class="tree-node" style="left:${left}px;top:${top}px" data-cls="${c.id}" data-name="${nm}"><div class="tn-name">${n.name}</div><div class="tn-cost">${costLbl}</div></div>`;
+  }).join('');
+  const lines=layout.edges.map(e=>{
+    const f=layout.posOf[e.from],t=layout.posOf[e.to];
+    if(!f||!t)return'';
+    const x1=f.tierIdx*colW+nodeW,y1=f.lane*rowH+nodeMidY,x2=t.tierIdx*colW,y2=t.lane*rowH+nodeMidY,mx=(x1+x2)/2;
+    return`<path class="${e.dashed?'dashed':''}" d="M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}"/>`;
+  }).join('');
+  const colLabels=c.tiers.map((t,ti)=>`<div class="tree-col-lbl" style="left:${ti*colW}px"><b>T${t.tier}</b>${t.label}</div>`).join('');
+  return`<div class="tree-scroll"><div class="tree-canvas" style="width:${width}px;height:${height}px">
+    ${colLabels}
+    <svg class="tree-lines" width="${width}" height="${height}">${lines}</svg>
+    ${nodesHTML}
+  </div></div>
+  <div class="tree-hint">Click a skill to view its full description. Dashed lines mark a second prerequisite.</div>
+  <div class="tree-detail" id="tree-detail-${c.id}"></div>`;
+}
+function rClasses(){
+  const el=document.getElementById('classes-body');if(el.dataset.r)return;el.dataset.r=1;
+  el.classList.add('mode-list');
+  el.addEventListener('click',e=>{
+    const nd=e.target.closest('.tree-node');
+    if(!nd)return;
+    const clsId=nd.dataset.cls,name=nd.dataset.name;
+    const c=CLASSES.find(x=>x.id===clsId);if(!c)return;
+    let found=null;
+    c.tiers.forEach(t=>t.skills.forEach(sk=>{if(sk.name===name)found=sk;}));
+    if(!found)return;
+    nd.closest('.tree-canvas').querySelectorAll('.tree-node').forEach(n=>n.classList.remove('selected'));
+    nd.classList.add('selected');
+    const prereq=found.prereq?`${found.prereq}${found.prereq2?' + '+found.prereq2:''}`:'';
+    const costLbl=found.cost>0?`<span class="sk-cost">${found.cost} pt${found.cost!==1?'s':''}</span>`:'';
+    const prereqLbl=prereq?`<span class="sk-prereq">Req: ${prereq}</span>`:'';
+    const detail=document.getElementById('tree-detail-'+clsId);
+    if(detail)detail.innerHTML=`<div class="sk-card"><div class="sk-top"><span class="sk-name">${found.name}</span>${costLbl}${prereqLbl}</div><div class="sk-desc">${found.desc}</div></div>`;
+  });
+  // toggle
+  const toggle=`<div class="view-toggle"><button class="vtbtn active" onclick="setClassesMode('list',this)">List</button><button class="vtbtn" onclick="setClassesMode('tree',this)">Tree</button></div>`;
+  // tabs
+  let tabs=`<div class="class-tabs">${CLASSES.map(c=>`<button class="ctab${c===CLASSES[0]?' active':''}" onclick="showClass('${c.id}',this)">${c.name}</button>`).join('')}</div>`;
+  // views
+  let views=CLASSES.map(c=>{
+    // resource box
+    let resBox='';
+    if(c.resource){
+      const r=c.resource;
+      resBox=`<div class="res-box"><div class="res-name">${r.name}</div>
+        <div class="res-row"><strong>Maximum</strong> ${r.max}</div>
+        <div class="res-row"><strong>Gain Grit when you</strong> ${r.gain.map(g=>`<div style="padding-left:.75rem;margin-top:.15rem">- ${g}</div>`).join('')}</div>
+        <div class="res-row" style="margin-top:.35rem"><strong>Reset</strong> ${r.reset}</div>
+      </div>`;
+    }
+    const note=c.note?`<div class="class-note">${c.note}</div>`:'';
+    // progression
+    const prog=`<div class="section"><div class="stitle">Progression</div>
+      <div class="tscroll"><table class="prog-table">
+        <thead><tr><th>Level</th><th>Gains</th></tr></thead>
+        <tbody>${c.progression.map(p=>`<tr><td><span class="prog-lvl">${p.level}</span></td><td>${p.gains}</td></tr>`).join('')}</tbody>
+      </table></div></div>`;
+    // tiers
+    const tiers=c.tiers.map(t=>`<div class="tier-blk">
+      <div class="tier-hdr"><span class="tier-num">Tier ${t.tier}</span><span class="tier-label">${t.label}</span></div>
+      ${t.skills.map(sk=>{
+        const prereq=sk.prereq?`${sk.prereq}${sk.prereq2?' + '+sk.prereq2:''}`:'';
+        const costLbl=sk.cost>0?`<span class="sk-cost">${sk.cost} pt${sk.cost!==1?'s':''}</span>`:'';
+        const prereqLbl=prereq?`<span class="sk-prereq">Req: ${prereq}</span>`:'';
+        return`<div class="sk-card"><div class="sk-top"><span class="sk-name">${sk.name}</span>${costLbl}${prereqLbl}</div><div class="sk-desc">${sk.desc}</div></div>`;
+      }).join('')}
+    </div>`).join('');
+    return`<div class="class-view${c===CLASSES[0]?' active':''}" id="cv-${c.id}">
+      <div class="class-hero-row"><div class="class-name">${c.name}</div></div>
+      <div class="class-desc">${c.desc}</div>
+      ${note}${resBox}
+      <div class="ibox"><strong>Points per level:</strong> ${c.pointsPerLevel}: Level 1 grants 1 bonus point.</div>
+      ${prog}
+      <div class="cv-list"><div class="section"><div class="stitle">Skills</div>${tiers}</div></div>
+      <div class="cv-tree"><div class="section"><div class="stitle">Skill Tree</div>${renderClassTree(c)}</div></div>
+    </div>`;
+  }).join('');
+  el.innerHTML=toggle+tabs+views;
+}
+function showClass(id,btn){
+  document.querySelectorAll('#classes-body .ctab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#classes-body .class-view').forEach(v=>v.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('cv-'+id).classList.add('active');
+}
+function setClassesMode(mode,btn){
+  const el=document.getElementById('classes-body');
+  el.classList.remove('mode-list','mode-tree');
+  el.classList.add('mode-'+mode);
+  el.querySelectorAll(':scope > .view-toggle .vtbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ── SUBCLASSES ──
+function rSubclasses(){
+  const el=document.getElementById('subclasses-body');if(el.dataset.r)return;el.dataset.r=1;
+  if(!SUBCLASSES||SUBCLASSES.length===0){
+    el.innerHTML=`<div class="placeholder-box"><strong>Coming Soon</strong><p>Subclass content will be added here.</p></div>`;return;
+  }
+
+  // shared helpers
+  const resBox=r=>`<div class="res-box"><div class="res-name">${r.name}</div>
+    <div class="res-row"><strong>Maximum</strong> ${r.max}</div>
+    <div class="res-row"><strong>How to gain</strong>${r.gain.map(g=>`<div style="padding-left:.75rem;margin-top:.15rem">- ${g}</div>`).join('')}</div>
+    <div class="res-row" style="margin-top:.35rem"><strong>Reset</strong> ${r.reset}</div></div>`;
+
+  const skillCard=sk=>{
+    const costLbl=sk.cost>0?`<span class="sk-cost">${sk.cost} pt${sk.cost!==1?'s':''}</span>`:`<span class="sk-cost" style="background:rgba(30,120,60,.12);border-color:rgba(30,120,60,.25);color:var(--txt-m)">free</span>`;
+    const prereqLbl=sk.prereq?`<span class="sk-prereq">Req: ${sk.prereq}</span>`:'';
+    return`<div class="sk-card"><div class="sk-top"><span class="sk-name">${sk.name}</span>${costLbl}${prereqLbl}</div><div class="sk-desc">${sk.desc}</div></div>`;
+  };
+
+  // Tarotist renderer - card groups with upright/reversed panels
+  const tarotistView=sc=>{
+    const deckRules=sc.deckRules.map(r=>`<div class="rcard" style="margin-bottom:2px">
+      <div class="sk-top"><span class="sk-name">${r.label}</span></div>
+      <div class="sk-desc">${r.text}</div></div>`).join('');
+
+    const cardGroups=sc.cardGroups.map(grp=>{
+      const costBadge=grp.cost===0
+        ?`<span class="sk-cost" style="background:rgba(30,120,60,.12);border-color:rgba(30,120,60,.25);color:var(--txt-m)">free</span>`
+        :`<span class="sk-cost">${grp.cost} pt${grp.cost!==1?'s':''}</span>`;
+      const cards=grp.cards.map(card=>{
+        if(!card.upright&&!card.reversed){
+          return`<div class="sk-card"><div class="sk-top"><span class="sk-name">${card.name}</span></div><div class="sk-desc">${card.desc}</div></div>`;
+        }
+        return`<div class="sk-card">
+          <div class="sk-top"><span class="sk-name">${card.name}</span></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:.4rem">
+            <div style="border-left:2px solid rgba(212,175,55,.4);padding-left:.65rem">
+              <div style="font-family:var(--ft);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.3rem">Upright</div>
+              <div class="sk-desc">${card.upright}</div>
+            </div>
+            <div style="border-left:2px solid rgba(160,60,30,.4);padding-left:.65rem">
+              <div style="font-family:var(--ft);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ember);margin-bottom:.3rem">Reversed</div>
+              <div class="sk-desc">${card.reversed}</div>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+      return`<div class="tier-blk">
+        <div class="tier-hdr">${costBadge}<span class="tier-label">${grp.label}</span></div>
+        ${cards}</div>`;
+    }).join('');
+
+    return`<div class="class-view${sc===SUBCLASSES[0]?' active':''}" id="cv-${sc.id}">
+      <div class="class-desc">${sc.desc}</div>
+      <div class="class-note">${sc.pointsNote}</div>
+      <div class="section"><div class="stitle">Deck Rules</div>${deckRules}</div>
+      <div class="section"><div class="stitle">Cards</div>${cardGroups}</div>
+    </div>`;
+  };
+
+  // Standard subclass renderer (flat skill list)
+  const standardView=sc=>{
+    const res=sc.resource?resBox(sc.resource):'';
+    const skills=sc.skills.map(skillCard).join('');
+    return`<div class="class-view${sc===SUBCLASSES[0]?' active':''}" id="cv-${sc.id}">
+      <div class="class-desc">${sc.desc}</div>
+      <div class="class-note">${sc.pointsNote}</div>
+      ${res}
+      <div class="section"><div class="stitle">Skills</div>${skills}</div>
+    </div>`;
+  };
+
+  const tabs=`<div class="class-tabs">${SUBCLASSES.map(sc=>`<button class="ctab${sc===SUBCLASSES[0]?' active':''}" onclick="showSubclass('${sc.id}',this)">${sc.name}</button>`).join('')}</div>`;
+  const views=SUBCLASSES.map(sc=>sc.deckRules?tarotistView(sc):standardView(sc)).join('');
+  el.innerHTML=tabs+views;
+}
+function showSubclass(id,btn){
+  document.querySelectorAll('#subclasses-body .ctab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#subclasses-body .class-view').forEach(v=>v.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('cv-'+id).classList.add('active');
+}
+
+// ── BACKGROUNDS ──
+function rBackgrounds(){
+  const el=document.getElementById('backgrounds-body');if(el.dataset.r)return;el.dataset.r=1;
+  if(!BACKGROUNDS||BACKGROUNDS.length===0){
+    el.innerHTML=`<div class="placeholder-box"><strong>Coming Soon</strong><p>Background content will be added here.</p></div>`;return;
+  }
+
+  const featureCard=f=>{
+    const costStr=String(f.cost).toLowerCase();
+    const costLbl=costStr==='free'||costStr==='0'
+      ?`<span class="sk-cost" style="background:rgba(30,120,60,.12);border-color:rgba(30,120,60,.25);color:var(--txt-m)">free</span>`
+      :`<span class="sk-cost">${f.cost} pt${f.cost!==1?'s':''}</span>`;
+    return`<div class="sk-card"><div class="sk-top"><span class="sk-name">${f.name}</span>${costLbl}</div><div class="sk-desc">${f.desc}</div></div>`;
+  };
+
+  const bgView=bg=>`<div class="class-view${bg===BACKGROUNDS[0]?' active':''}" id="bgv-${bg.id}">
+    <div class="section"><div class="stitle">Features</div>${bg.features.map(featureCard).join('')}</div>
+  </div>`;
+
+  const tabs=BACKGROUNDS.length>1
+    ?`<div class="class-tabs">${BACKGROUNDS.map(bg=>`<button class="ctab${bg===BACKGROUNDS[0]?' active':''}" onclick="showBackground('${bg.id}',this)">${bg.name}</button>`).join('')}</div>`
+    :``;
+  const views=BACKGROUNDS.map(bgView).join('');
+  el.innerHTML=tabs+views;
+}
+function showBackground(id,btn){
+  document.querySelectorAll('#backgrounds-body .ctab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#backgrounds-body .class-view').forEach(v=>v.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('bgv-'+id).classList.add('active');
+}
+
+// ── ETHER CORES ──
+function rEther(){
+  const el=document.getElementById('ether-body');if(el.dataset.r)return;el.dataset.r=1;
+  const tierClass=['et-uc','et-r','et-vr','et-l'];
+  const noteClass={crash:'en-crash',addict:'en-addict',safe:'en-safe',volatile:'en-volatile'};
+
+  function buildCol(data, isConsume){
+    const lbl=isConsume
+      ?`<span class="ether-method-lbl em-consume">Consumed - temporary</span>`
+      :`<span class="ether-method-lbl em-focus">Infused into focus <span class="perm-pill">permanent</span></span>`;
+    const tiers=data.tiers.map((t,i)=>`<div class="etier ${tierClass[i]}">
+      <div class="etier-name">${t.rarity}</div>
+      <div class="etier-text">${t.text}</div>
+    </div>`).join('');
+    const note=`<div class="ether-note ${noteClass[data.sideEffect.type]}">${data.sideEffect.text}</div>`;
+    const craft=(!isConsume&&data.craftNote)?`<div class="ether-craft">${data.craftNote}</div>`:'';
+    return`<div class="ether-col">${lbl}<div class="ether-tiers">${tiers}</div>${note}${craft}</div>`;
+  }
+
+  const html=ETHER_STRAINS.map(s=>`
+    <div class="ether-strain">
+      <div class="ether-hdr">
+        <div class="ether-sub">${s.subtitle}</div>
+        <div class="ether-name">${s.name}</div>
+        <div class="ether-lore">${s.lore}</div>
+      </div>
+      <div class="ether-cols">
+        ${buildCol(s.consumed, true)}
+        ${buildCol(s.focus, false)}
+      </div>
+    </div>`).join('');
+
+  el.innerHTML=`<div class="section"><div class="stitle">How Ether works</div>
+    <div class="ibox">Ether cores are one-use. <strong>Consumed</strong>: swallowed or absorbed directly, raw power, temporary, with a crash when it ends. <strong>Infused into a focus</strong>: permanently inserted by a craftsman, weaker but the effect never expires. A focus holds only one infusion; inserting a second destroys the first.</div>
+  </div>${html}`;
+}
+
+// ── MOBILE NAV ──
+function toggleMobMenu(){document.getElementById('mob-overlay').classList.toggle('open')}
+function closeMobMenu(){document.getElementById('mob-overlay').classList.remove('open')}
+function mobNav(id){closeMobMenu();showPage(id);if(id==='spells')setSchool('all')}
+function buildMobSchoolSubnav(){
+  const el=document.getElementById('mob-school-subnav');
+  if(!el)return;
+  el.innerHTML=SCHOOLS.map(s=>`<button class="nsubitem" data-school="${s.id}" onclick="closeMobMenu();showPage('spells');setSchool('${s.id}')">${s.name}</button>`).join('');
+}
+
+// ── INIT ──
+// Each step runs independently: if one throws (most likely because rules.js /
+// spells.js / classes.js failed to download), the rest still run instead of
+// the whole init sequence silently stopping at the first failure.
+function safeInit(fn,label){ try{ fn(); }catch(e){ console.error('Init step failed: '+label,e); } }
+safeInit(buildSubnav,'buildSubnav');
+safeInit(buildHome,'buildHome');
+safeInit(buildMobSchoolSubnav,'buildMobSchoolSubnav');
+safeInit(rSpells,'rSpells');
+</script>
+</body>
+</html>

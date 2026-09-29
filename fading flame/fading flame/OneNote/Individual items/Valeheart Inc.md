@@ -1,0 +1,2 @@
+Valeheart inc is owned and created by [[Cassian Valeheart and his Aetherium factory-]]
+Its base is harvesting aether by bleeding the [[Angels]] [[Xshathra Vairya]] of their life essence which can create materials of high energy such as aether. 

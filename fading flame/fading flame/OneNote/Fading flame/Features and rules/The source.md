@@ -1,0 +1,2 @@
+The absence of a god of magic has left an open an empty hole of magical potential in the world. This "source" spills out into the human world in many forms, magically talented bloodlines, or even into materials such as ether and its currupted form voidglass.  
+The old ones also draw from this source to regain their powers and

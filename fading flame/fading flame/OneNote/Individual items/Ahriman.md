@@ -1,0 +1,1 @@
+Ahriman is the opposite of [[Ahura Mazda]] he is the incarnation of absolute evil and is used as a show by the [[The Pantheon of gods]] as just that.  He is as responsible for the other side of the [[Everlasting War]]. Which includes summoning demons, creating hell for those worthy of it, but also using illusions to fuel the war. 

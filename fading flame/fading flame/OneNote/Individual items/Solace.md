@@ -1,0 +1,1 @@
+Solace is the last known standing civilization. Founded by [[Asha vasishta]] it has become the home of the last remaning humans

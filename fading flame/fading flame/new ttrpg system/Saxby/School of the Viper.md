@@ -1,0 +1,13 @@
+
+| Name                     | Description                                                                                                                                                          | Cost | Prerequisite             |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- | ------------------------ |
+| Quick weapon study       | You gain proficiency in one additional weapon material. Choose between (Boron-lattice, Sanctified steel, Red meteorite, Silver)                                      | Free |                          |
+| Oil crafter l            | You gain can use your alchemical tools to make oils of tier l                                                                                                        | 1    |                          |
+| Quick application        | Once a turn as a half action you may apply a poison or a oil on a weapon.                                                                                            | 2    | Oil crafter l            |
+| Oil crafter ll           | You may craft oils of Tier ll                                                                                                                                        | 2    | Oil crafter l, level 8   |
+| Oil crafter lll          | You may craft oils of Tier lll                                                                                                                                       | 2    | Oil crafter ll, level 14 |
+| Quickswap                | Once a turn you may switch the weapon you are wielding as part of the weapon attack.                                                                                 | 1    | Quick weapon study       |
+| Quick weapon study ll    | You gain proficiency in one additional weapon material. Choose between (Boron-lattice, Sanctified steel, Red meteorite, Silver)                                      | 1    |                          |
+| Find weakness            | When studying a creature as an action or using a feature such as find Unnatural sense, you gain an additional success for trying to find a creature's **Weak spot**. | 2    |                          |
+| Exploitation of weakness | (the dc for aiming for **weak spot** is usually higher). When rolling to hit or using an ability to exploit a creatures **Weak spot** the dc is decreased by 1.      | 1    | Find weakness            |
+Every 3 levels you gain 2 points in your subclass

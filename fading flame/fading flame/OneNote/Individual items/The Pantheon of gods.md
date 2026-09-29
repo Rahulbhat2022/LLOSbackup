@@ -1,0 +1,3 @@
+The pantheon of gods is a interconnection of all real world written gods. With ahura mazda in the centre. 
+At the very start of the world, the over goddess [[Valeria]] created the [[Wishing stars]].  From those humans believed and wished for gods until multiple pantheons of different beliefs formed. 
+The pantheon of gods are fueled by worship and belief.  These gods want and need constant worship. In that they created the [[Everlasting War]], as nothing breeds belief and worship as a shitty situation and war is just that. A religion to fight for. 

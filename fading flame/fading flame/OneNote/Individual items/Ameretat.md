@@ -1,0 +1,1 @@
+Ameratat is the angel of immortality. An angel created by [[Ahura Mazda]] among other angels to fuel the [[Everlasting War]]. Ameratat was used to forever raise the [[Valkyries]] so they never died. The could keep fighting. Though ameretat had a favourite, [[Tuba]]. 

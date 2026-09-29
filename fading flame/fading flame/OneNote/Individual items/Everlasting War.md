@@ -1,0 +1,1 @@
+The everlasting war was a way to fuel belief and worship to [[The Pantheon of gods]]. They set it up in a way where it would never end. using illusions and summons and manufacturing sides and causes for the war to be everlasting. It will never end because it was designed not to. 

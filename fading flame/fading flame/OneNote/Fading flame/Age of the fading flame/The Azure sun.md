@@ -1,0 +1,7 @@
+
+
+**The Sister Sun (The Source of Magic)**
+
+- **Appearance:** The Sister Sun is a calming yet mysterious **blue** sun, a softer glow that contrasts with her brother’s fiery radiance. Unlike the Brother Sun, her light is more subtle and ethereal, almost otherworldly in its gentle beauty. Her light doesn’t merely illuminate — it **spills** strands of **magic** into the world.
+- **Role:** The Sister Sun is the **source of magic**, the divine wellspring from which all mages draw their power. She is the **remainder of the previous goddess** who once held the mantle of magic but relinquished it after leaving her post. Her magic flows down to Earth in strands, imbued with arcane energy that nourishes the world’s magical veins. These strands of energy are scattered across the land, sometimes visible to those attuned to the arcane, and form the basis for all magical knowledge and power.
+- **Worship:** The Sister Sun is revered by scholars, mages, and those who seek the pursuit of knowledge and understanding of the mystical forces of the world. Her followers are often practitioners of magic, seeking to tap into the strands of power that spill from her light. They view her as the eternal source of all magic and the balance to the Brother Sun’s force of life and strength. Her followers see her as the divine force that makes the impossible possible, allowing magic to shape the world in ways that the physical world alone cannot.
